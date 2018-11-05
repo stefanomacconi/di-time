@@ -1,4 +1,4 @@
-# di-time
+# DiTime
 
 ## Project setup
 ```
