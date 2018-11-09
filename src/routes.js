@@ -56,8 +56,5 @@ export const routes = [
             }
         }
     },
-    {path: "/error", name:"error",  components: {
-        default: Error,
-        toolbar: ToolbarLogin
-      },  props: true}  
+    {path: "/error", name:"error",  component: Error,  props: true}  
 ]

@@ -5,7 +5,8 @@ const state = {
     token: null,
     utente: null,
     siglaDitta: null,
-    ditta: null
+    ditta: null,
+    dipendente: null
 }
 
 const mutations = {
@@ -20,24 +21,15 @@ const mutations = {
         state.utente = null
         state.siglaDitta = null
         state.ditta = null
+        state.dipendente = null
+    },
+    setDipendente(state, dipendente) {
+        state.dipendente = dipendente
     }
 }
 
 const actions = {
     login({ commit, dispatch, state}, authData) {
-        // TODO RIMUOVERE
-        // *****************
-        commit('authUser', {
-            token: "ABCDE1234",
-            utente: "Stefano",
-            ditta: "Impianti Industriali",
-            siglaDitta: "II"
-        })
-        router.push('/movimenti')
-        return;
-        /* eslint-disable */
-        // *****************
-        
         axios.post('/autenticazione', {
             }, { auth: {
                 username: authData.utente,
@@ -58,6 +50,11 @@ const actions = {
             })
             // init environment
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.token;
+            return dispatch('fetchDipendente').then(() => {
+                dispatch('fetchMovimenti').then(() => {
+                    router.push('/movimenti')
+                })
+            })
         }).catch(error => {
             // eslint-disable-next-line
             console.log(error)
@@ -74,7 +71,7 @@ const actions = {
             message : error.message,
             developerMessage : error.developerMessage,
             code : error.code,
-            status : error.status,
+            status : error.status
         }
         // eslint-disable-next-line
         console.log(errorData)
@@ -82,9 +79,27 @@ const actions = {
             message : errorData.message,
             developerMessage : errorData.developerMessage,
             code : errorData.code,
-            status : errorData.status, 
+            status : errorData.status 
         }})
-    }
+    },
+    fetchDipendente({ commit, dispatch, state }) {
+        return new Promise((resolve, reject) => {
+            axios.get('/dipendente')
+            .then(res => {
+                // eslint-disable-next-line
+                console.log(res)
+                commit('setDipendente', res.data.dipendente)
+                resolve()
+            }).catch(error => {
+                // eslint-disable-next-line
+                console.log(error)
+                dispatch('handleError', {
+                    developerMessage : "Impossibile recuperare il dipendente per l'utente " + state.utente
+                })
+                reject()
+            })
+        })
+    },
 }
 
 const getters = {
@@ -93,6 +108,9 @@ const getters = {
     },
     getUtente(state) {
         return state.utente ? state.utente.toUpperCase() : state.utente
+    },
+    getDipendente(state) {
+        return state.dipendente
     },
     getSiglaDitta(state) {
         return state.siglaDitta

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <toolbar></toolbar>
         <v-alert type="error" :value="true">ERROR {{ code }} : {{ status }}</v-alert>
         <v-container fluid grid-list-md>
             <v-card color="red lighten-5">
@@ -15,11 +16,15 @@
             </v-card>
             </v-expansion-panel-content>
         </v-expansion-panel>
+        <br>
         <v-btn color="primary" @click="goBack()">Indietro</v-btn>
     </div>
 </template>
 
 <script>
+
+import Toolbar from './Toolbars/ToolbarLogin'
+
 export default {
     props: {
         message: {
@@ -37,6 +42,9 @@ export default {
             type: String,
             default: "Not Found"
         }
+    },
+    components: {
+        Toolbar
     },
     methods: {
         goBack() {
