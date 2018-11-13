@@ -16,7 +16,7 @@
           </v-btn>
           <v-divider dark vertical></v-divider>
           <v-btn icon>
-            <v-icon color="red accent-2">delete</v-icon>
+            <v-icon color="red accent-2">delete_outline</v-icon>
           </v-btn>
         </v-toolbar-items>
     </v-toolbar>
