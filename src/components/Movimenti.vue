@@ -2,52 +2,59 @@
   <div>
     <v-timeline align-top dense>
       <div v-for="(movimento, index) in movimenti" :key="movimento.numeroMovimento + Math.random() + index">
-        <v-timeline-item v-if="differentDate(movimenti[index - 1], movimenti[index])" color="success">
-          <v-img class="rounded" max-height="70px" max-width="500px" :src="getSeasonImage(movimento.data)"
-            gradient="to top, rgba(0,0,0,.50), rgba(0,0,0,.50)">
+        <v-timeline-item v-if="differentDate(movimenti[index - 1], movimenti[index])" color="primary">
+          <!-- <v-img class="rounded" max-height="70px" max-width="500px" :src="getSeasonImage(movimento.data)"
+            gradient="to top, rgba(0,0,0,.50), rgba(0,0,0,.50)"> -->
             <v-container fill-height>
               <v-layout>
                 <div>
-                  <font color="white">
+                  <strong style="font-size: 15px;"> <!-- color="white" -->
                     {{ moment(movimento.data).locale('it').format('dddd, DD MMMM YYYY').toUpperCase() }}
-                  </font>
+                  </strong>
                   <br>
-                  <font color="white">
+                  <font> <!-- color="white" -->
                     {{ getOrariGiornata(movimento) }}
                   </font>
                 </div>
               </v-layout>
             </v-container>
-          </v-img>
+          <!-- </v-img> -->
         </v-timeline-item>
-        <v-timeline-item small to="/movimento"> <!-- :color="getClienteColor(movimento.cliente)" -->
-          <v-layout pt-3>
-            <v-flex xs5 md2>
-              <div v-if="movimento.oraInizioAttMattino">
-                <strong>{{ getOrariMovimentoMattina(movimento) }}</strong>
-                <br>
-              </div>
-              <div v-if="movimento.oraInizioAttPomeriggio">
-                <strong>{{ getOrariMovimentoPomeriggio(movimento) }}</strong>
-                <br>
-              </div>
-              <div>
-                {{ moment.utc(moment.duration(movimento.tempo,"h").asMilliseconds()).format("HH[h] mm[min]") }}
-              </div>
-            </v-flex>
-            <v-flex xs7 md10> <!--offset-xs1 -->
-              <strong>{{ movimento.commessa }}</strong>
-              <div class="caption hidden-sm-and-up">
-                <p>{{ movimento.descrizioneCommessa | truncate }}</p>
-                {{ movimento.descrizione | truncate }}
-              </div>
-              <div class="caption hidden-xs-only">
-                <p>{{ movimento.descrizioneCommessa }}</p>
-                {{ movimento.descrizione }}
-              </div>
-            </v-flex>
-          </v-layout>
-        </v-timeline-item>
+        <router-link :to="{ name: 'movimento', params: { id: movimento.numeroMovimento }}" tag="div">
+          <v-timeline-item small :color="colorNode(index)">
+            <v-layout pt-3>
+              <v-flex xs4 md2>
+                <div v-if="movimento.oraInizioAttMattino">
+                  <strong>{{ getOrariMovimentoMattina(movimento) }}</strong>
+                  <br>
+                </div>
+                <div v-if="movimento.oraInizioAttPomeriggio">
+                  <strong>{{ getOrariMovimentoPomeriggio(movimento) }}</strong>
+                  <br>
+                </div>
+                <div>
+                  {{ moment.utc(moment.duration(movimento.tempo,"h").asMilliseconds()).format("HH[h] mm[min]") }}
+                </div>
+              </v-flex>
+              <v-flex xs8 md10> <!--offset-xs1 -->
+                <strong>{{ movimento.commessa }}</strong>
+                <div class="caption hidden-sm-and-up">
+                  <p>{{ movimento.descrizioneCommessa | truncate }}</p>
+                </div>
+                <div class="hidden-sm-and-up">
+                  {{ movimento.descrizione | truncate }}
+                </div>
+                <div class="hidden-xs-only">
+                  <p>{{ movimento.descrizioneCommessa }}</p>
+                </div>
+                <div class="hidden-xs-only">
+                  {{ movimento.descrizione }}
+                </div>
+              </v-flex>
+            </v-layout>
+          </v-timeline-item>
+        </router-link>
+        <v-divider inset></v-divider>
       </div>
     </v-timeline>
     <v-layout column class="fab-container">
@@ -58,7 +65,7 @@
     <v-btn v-if="moreMovs" dark flat icon small class="red" style="left:-3px" @click="more">
       <v-icon>arrow_drop_down</v-icon>
     </v-btn>
-    <v-btn v-else dark flat icon small class="green">
+    <v-btn v-else dark flat icon small class="green" style="left:-3px">
       <v-icon>check</v-icon>
     </v-btn>
     <div class="text-xs-center">
@@ -66,7 +73,7 @@
         <v-card color="primary" dark>
           <v-card-text>
             Attendere...
-            <v-progress-linear indeterminate color="white" style="left:-3px" class="mb-0"></v-progress-linear>
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
           </v-card-text>
         </v-card>
       </v-dialog>
@@ -79,26 +86,7 @@ export default {
   data: () => ({
     dialog: false,
     offset: 0,
-    moreMovs: true,
-    color: [
-      "pink",
-      "cyan",
-      "blue",
-      "brown",
-      "purple",
-      "indigo",
-      "deep-purple",
-      "teal",
-      "light-blue",
-      "light-green",
-      "lime",
-      "orange",
-      "amber",
-      "deep-orange",
-      "blue-grey",
-      "grey"
-    ],
-    clientiColor : []
+    moreMovs: true
   }),
   computed: {
     movimenti() {
@@ -166,6 +154,11 @@ export default {
     randomColor() {
       return this.color[Math.floor(Math.random() * this.color.length)]
     },
+    colorNode(index) {
+      if (index % 2 == 0) 
+        return "secondary"
+      return "info"
+    }
   },
   filters: {
   truncate: function (value) {

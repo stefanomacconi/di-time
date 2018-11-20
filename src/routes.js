@@ -34,7 +34,7 @@ export const routes = [
             }
         }
     },
-    { name: "movimento", path: '/movimento',  components: {
+    { name: "movimento", path: '/movimento/:id',  components: {
         default: Movimento,
         toolbar: ToolbarMovimento
       }, beforeEnter(to, from, next) {
