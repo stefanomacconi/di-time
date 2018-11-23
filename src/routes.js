@@ -1,8 +1,8 @@
 import Login from './components/Login'
 import Error from './components/Error'
 import Movimenti from './components/Movimenti'
-import Movimento from './components/Movimento'
-import Nuovo from './components/Nuovo'
+import DettaglioMov from './components/DettaglioMov'
+import NuovoMov from './components/NuovoMov'
 import ToolbarLogin from './components/Toolbars/ToolbarLogin'
 import ToolbarMovimenti from './components/Toolbars/ToolbarMovimenti'
 import ToolbarMovimento from './components/Toolbars/ToolbarMovimento'
@@ -35,7 +35,7 @@ export const routes = [
         }
     },
     { name: "movimento", path: '/movimento/:id',  components: {
-        default: Movimento,
+        default: DettaglioMov,
         toolbar: ToolbarMovimento
       }, beforeEnter(to, from, next) {
             if (store.getters.getToken) {
@@ -46,7 +46,7 @@ export const routes = [
         }
     },
     { name: "nuovo", path: '/nuovo',  components: {
-        default: Nuovo,
+        default: NuovoMov,
         toolbar: ToolbarNuovo
       }, beforeEnter(to, from, next) {
             if (store.getters.getToken) {

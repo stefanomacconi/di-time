@@ -20,41 +20,10 @@
             </v-container>
           <!-- </v-img> -->
         </v-timeline-item>
-        <router-link :to="{ name: 'movimento', params: { id: movimento.numeroMovimento }}" tag="div">
-          <v-timeline-item small :color="colorNode(index)">
-            <v-layout pt-3>
-              <v-flex xs4 md2>
-                <div v-if="movimento.oraInizioAttMattino">
-                  <strong>{{ getOrariMovimentoMattina(movimento) }}</strong>
-                  <br>
-                </div>
-                <div v-if="movimento.oraInizioAttPomeriggio">
-                  <strong>{{ getOrariMovimentoPomeriggio(movimento) }}</strong>
-                  <br>
-                </div>
-                <div>
-                  {{ moment.utc(moment.duration(movimento.tempo,"h").asMilliseconds()).format("HH[h] mm[min]") }}
-                </div>
-              </v-flex>
-              <v-flex xs8 md10> <!--offset-xs1 -->
-                <strong>{{ movimento.commessa }}</strong>
-                <div class="caption hidden-sm-and-up">
-                  <p>{{ movimento.descrizioneCommessa | truncate }}</p>
-                </div>
-                <div class="hidden-sm-and-up">
-                  {{ movimento.descrizione | truncate }}
-                </div>
-                <div class="hidden-xs-only">
-                  <p>{{ movimento.descrizioneCommessa }}</p>
-                </div>
-                <div class="hidden-xs-only">
-                  {{ movimento.descrizione }}
-                </div>
-              </v-flex>
-            </v-layout>
-          </v-timeline-item>
-        </router-link>
-        <v-divider inset></v-divider>
+        <movimento
+          :movimento="movimento"
+        />
+        <v-divider inset v-if="!differentDate(movimenti[index + 1], movimenti[index])"></v-divider>
       </div>
     </v-timeline>
     <v-layout column class="fab-container">
@@ -82,6 +51,9 @@
 </template>
 
 <script>
+
+import Movimento from './Movimento.vue';
+
 export default {
   data: () => ({
     dialog: false,
@@ -93,6 +65,9 @@ export default {
       return this.$store.getters.getMovimenti            
     },
   },
+  components: {
+    'movimento': Movimento
+  },
   methods: {
     more() {
       this.dialog = true
@@ -103,9 +78,9 @@ export default {
         this.dialog = false
       })
     },
-    differentDate(movimentoPrecedente, movimento) {
-      if (movimentoPrecedente) {
-        return movimentoPrecedente.data === movimento.data ? false : true
+    differentDate(movimentoPrecedenteOSuccessivo, movimento) {
+      if (movimentoPrecedenteOSuccessivo) {
+        return movimentoPrecedenteOSuccessivo.data === movimento.data ? false : true
       }
       return true
     },
@@ -118,57 +93,14 @@ export default {
           this.getTimeFromInteger(movimento.oraFinePomeriggio)
       }
     },
-    getOrariMovimentoMattina(movimento) {
-      var orariMovimentoMattina = this.getTimeFromInteger(movimento.oraInizioAttMattino)
-      if (orariMovimentoMattina) {
-        return orariMovimentoMattina + " - " +
-          this.getTimeFromInteger(movimento.oraFineAttMattino)
-      }
-    },
-    getOrariMovimentoPomeriggio(movimento) {
-      var orariMovimentoPomeriggio = this.getTimeFromInteger(movimento.oraInizioAttPomeriggio)
-      if (orariMovimentoPomeriggio) {
-        return orariMovimentoPomeriggio + " - " +
-          this.getTimeFromInteger(movimento.oraFineAttPomeriggio)
-      }
-    },
     getTimeFromInteger(time) {
       var min = (time).toString().slice(-2)
       var hour = (time).toString().substring(0, (time).toString().length - 2)
       if (min && hour) 
         return hour + ":" + min
       return null
-    },
-    getSeasonImage(time) {
-      var date = new Date(time)
-      var month = date.getMonth() + 1
-      if (month >= 12 || month <= 3)
-        return require('../assets/img/winter.jpg')
-      if (month >= 10 && month <= 11)
-        return require('../assets/img/fall.jpg')
-      if (month >= 4 && month <= 6)
-        return require('../assets/img/spring.jpg')
-      if (month >= 7 && month <= 9)
-        return require('../assets/img/summer.jpg')
-    },
-    randomColor() {
-      return this.color[Math.floor(Math.random() * this.color.length)]
-    },
-    colorNode(index) {
-      if (index % 2 == 0) 
-        return "secondary"
-      return "info"
     }
-  },
-  filters: {
-  truncate: function (value) {
-    if (!value) return ''
-    value = value.toString()
-    if(value.length > 50)
-      return value.substring(0,49)+"...";
-    return value
   }
-}
 }
 </script>
 
