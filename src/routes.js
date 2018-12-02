@@ -1,12 +1,10 @@
 import Login from './components/Login'
 import Error from './components/Error'
-import Movimenti from './components/Movimenti'
-import DettaglioMov from './components/DettaglioMov'
-import NuovoMov from './components/NuovoMov'
+import Movimenti from './components/Movimenti/Movimenti'
+import DettaglioMov from './components/Movimento/DettaglioMov'
 import ToolbarLogin from './components/Toolbars/ToolbarLogin'
 import ToolbarMovimenti from './components/Toolbars/ToolbarMovimenti'
 import ToolbarMovimento from './components/Toolbars/ToolbarMovimento'
-import ToolbarNuovo from './components/Toolbars/ToolbarNuovo'
 
 import store from './store/store'
 
@@ -34,21 +32,15 @@ export const routes = [
             }
         }
     },
-    { name: "movimento", path: '/movimento/:id',  components: {
-        default: DettaglioMov,
-        toolbar: ToolbarMovimento
-      }, beforeEnter(to, from, next) {
-            if (store.getters.getToken) {
-                next()
-            } else {
-                next('/login')
-            }
-        }
-    },
-    { name: "nuovo", path: '/nuovo',  components: {
-        default: NuovoMov,
-        toolbar: ToolbarNuovo
-      }, beforeEnter(to, from, next) {
+    { name: "movimento", path: '/movimento/:id?',  
+        components: {
+            default: DettaglioMov,
+            toolbar: ToolbarMovimento
+        }, 
+        props: {
+            default: false, toolbar: true 
+        }, 
+        beforeEnter(to, from, next) {
             if (store.getters.getToken) {
                 next()
             } else {

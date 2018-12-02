@@ -18,13 +18,13 @@
         <v-flex xs8 md10> <!--offset-xs1 -->
           <strong>{{ movimento.commessa }}</strong>
           <div class="caption hidden-sm-and-up">
-            <p>{{ movimento.descrizioneCommessa | truncate }}</p>
+            {{ movimento.descrizioneCommessa | truncate }}
           </div>
           <div class="hidden-sm-and-up">
             {{ movimento.descrizione | truncate }}
           </div>
-          <div class="hidden-xs-only">
-            <p>{{ movimento.descrizioneCommessa }}</p>
+          <div class="caption hidden-xs-only">
+            {{ movimento.descrizioneCommessa }}
           </div>
           <div class="hidden-xs-only">
             {{ movimento.descrizione }}
@@ -36,6 +36,9 @@
 </template>
 
 <script>
+
+import moment from 'moment';
+
 export default {
     props: {
     movimento: {
@@ -61,20 +64,20 @@ export default {
       var min = (time).toString().slice(-2)
       var hour = (time).toString().substring(0, (time).toString().length - 2)
       if (min && hour) 
-        return hour + ":" + min
+        return moment({ hour: hour, minute: min }).format('HH:mm')
       return null
     },
     getSeasonImage(time) {
       var date = new Date(time)
       var month = date.getMonth() + 1
       if (month >= 12 || month <= 3)
-        return require('../assets/img/winter.jpg')
+        return require('../../assets/img/winter.jpg')
       if (month >= 10 && month <= 11)
-        return require('../assets/img/fall.jpg')
+        return require('../../assets/img/fall.jpg')
       if (month >= 4 && month <= 6)
-        return require('../assets/img/spring.jpg')
+        return require('../../assets/img/spring.jpg')
       if (month >= 7 && month <= 9)
-        return require('../assets/img/summer.jpg')
+        return require('../../assets/img/summer.jpg')
     }
   }
 }
