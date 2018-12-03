@@ -6,20 +6,22 @@
           :color="getDayColor(movimenti[index], index)">
           <!-- <v-img class="rounded" max-height="70px" max-width="500px" :src="getSeasonImage(movimento.data)"
             gradient="to top, rgba(0,0,0,.50), rgba(0,0,0,.50)"> -->
-            <v-container fill-height>
-              <v-layout>
+          <v-container fill-height>
+            <v-layout>
+              <div>
+                <strong style="font-size: 15px;"> <!-- color="white" -->
+                  {{ moment(movimento.data).locale('it').format('dddd, DD MMMM YYYY').toUpperCase() }}
+                </strong>
+                <div v-if="getOrariGiornata(movimento)"> <!-- color="white" -->
+                  {{ getOrariGiornata(movimento) }}
+                {{ "(" + moment(getTotalHourDay(movimento)).format("HH[h] mm[min]") + ")" }}
+                </div>
                 <div>
-                  <strong style="font-size: 15px;"> <!-- color="white" -->
-                    {{ moment(movimento.data).locale('it').format('dddd, DD MMMM YYYY').toUpperCase() }}
-                  </strong>
-                  <div v-if="getOrariGiornata(movimento)"> <!-- color="white" -->
-                    {{ getOrariGiornata(movimento) }}
-                  {{ "(" + moment(getTotalHourDay(movimento)).format("HH[h] mm[min]") + ")" }}
-                  </div>
                   {{ moment(getTotalHourMovs(movimento.data, index)).format("HH[h] mm[min]") }}
                 </div>
-              </v-layout>
-            </v-container>
+              </div>
+            </v-layout>
+          </v-container>
           <!-- </v-img> -->
         </v-timeline-item>
         <movimento :movimento="movimento"/>
@@ -52,9 +54,11 @@
 
 <script>
 
-import moment from 'moment';
+import moment from 'moment'
 
-import Movimento from './Movimento.vue';
+import Movimento from './Movimento.vue'
+
+import utilities from "../../utilitiesMixin.js"
 
 export default {
   data: () => ({
@@ -70,6 +74,7 @@ export default {
   components: {
     'movimento': Movimento
   },
+  mixins: [utilities],
   methods: {
     more() {
       this.dialog = true
@@ -87,20 +92,13 @@ export default {
       return true
     },
     getOrariGiornata(movimento) {
-      var orariInizioMattino = this.getTime(movimento.oraInizioMattino)
+      var orariInizioMattino = this.getTimeFromInteger(movimento.oraInizioMattino)
       if (orariInizioMattino) {
         return orariInizioMattino + " - " +
-          this.getTime(movimento.oraFineMattino) + " | " +
-          this.getTime(movimento.oraInizioPomeriggio) + " - " +
-          this.getTime(movimento.oraFinePomeriggio)
+          this.getTimeFromInteger(movimento.oraFineMattino) + " | " +
+          this.getTimeFromInteger(movimento.oraInizioPomeriggio) + " - " +
+          this.getTimeFromInteger(movimento.oraFinePomeriggio)
       }
-    },
-    getTime(integerTime) {
-      var min = (integerTime).toString().slice(-2)
-      var hour = (integerTime).toString().substring(0, (integerTime).toString().length - 2)
-      if (min && hour)
-        return moment({ hour: hour, minute: min }).format('HH:mm')
-      return null
     },
     getDayColor(movimento, index) {
       const totaleOreGiorno = moment.duration(this.getTotalHourDay(movimento)).asMilliseconds()
@@ -113,11 +111,11 @@ export default {
         return "error"
     },
     getTotalHourDay(movimento) {
-      var t1 = moment(this.getTime(movimento.oraInizioMattino), "HH:mm")
-      var t2 = moment(this.getTime(movimento.oraFineMattino), "HH:mm")
+      var t1 = moment(this.getTimeFromInteger(movimento.oraInizioMattino), "HH:mm")
+      var t2 = moment(this.getTimeFromInteger(movimento.oraFineMattino), "HH:mm")
       var mattino = t2.diff(t1)
-      var t3 = moment(this.getTime(movimento.oraInizioPomeriggio), "HH:mm")
-      var t4 = moment(this.getTime(movimento.oraFinePomeriggio), "HH:mm")
+      var t3 = moment(this.getTimeFromInteger(movimento.oraInizioPomeriggio), "HH:mm")
+      var t4 = moment(this.getTimeFromInteger(movimento.oraFinePomeriggio), "HH:mm")
       var pomeriggio = t4.diff(t3)
       var totale = moment(mattino).add(pomeriggio)
       totale = totale - 3600000 // Non so perché moment calcola un'ora in più. Comunque la tolgo.
@@ -140,7 +138,19 @@ export default {
       })
       totale = totale - 3600000 // Non so perché moment calcola un'ora in più. Comunque la tolgo.
       return totale
-    }
+    },
+    /* getSeasonImage(time) {
+      var date = new Date(time)
+      var month = date.getMonth() + 1
+      if (month >= 12 || month <= 3)
+        return require('../../assets/img/winter.jpg')
+      if (month >= 10 && month <= 11)
+        return require('../../assets/img/fall.jpg')
+      if (month >= 4 && month <= 6)
+        return require('../../assets/img/spring.jpg')
+      if (month >= 7 && month <= 9)
+        return require('../../assets/img/summer.jpg')
+    } */
   }
 }
 </script>

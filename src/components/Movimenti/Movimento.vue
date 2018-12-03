@@ -37,7 +37,7 @@
 
 <script>
 
-import moment from 'moment';
+import utilities from "../../utilitiesMixin.js"
 
 export default {
     props: {
@@ -60,25 +60,7 @@ export default {
           this.getTimeFromInteger(movimento.oraFineAttPomeriggio)
       }
     },
-    getTimeFromInteger(time) {
-      var min = (time).toString().slice(-2)
-      var hour = (time).toString().substring(0, (time).toString().length - 2)
-      if (min && hour) 
-        return moment({ hour: hour, minute: min }).format('HH:mm')
-      return null
-    },
-    getSeasonImage(time) {
-      var date = new Date(time)
-      var month = date.getMonth() + 1
-      if (month >= 12 || month <= 3)
-        return require('../../assets/img/winter.jpg')
-      if (month >= 10 && month <= 11)
-        return require('../../assets/img/fall.jpg')
-      if (month >= 4 && month <= 6)
-        return require('../../assets/img/spring.jpg')
-      if (month >= 7 && month <= 9)
-        return require('../../assets/img/summer.jpg')
-    }
-  }
+  },
+  mixins: [utilities]
 }
 </script>
