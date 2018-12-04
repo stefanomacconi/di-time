@@ -7,6 +7,11 @@
         <v-divider light vertical></v-divider>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn icon>
+          <v-icon>event</v-icon>
+        </v-btn>
+      </v-toolbar-items>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn @click="logout" flat>
           <v-icon left>{{ menuLogout.icon }}</v-icon>

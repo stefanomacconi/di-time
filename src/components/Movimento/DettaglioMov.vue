@@ -1,11 +1,8 @@
 <template>
   <div>
-    MOVIMENTO {{ $route.params.id }}
-    <v-tabs-items v-model="tab" class="white elevation-1">
+    <v-tabs-items v-model="tab">
       <v-tab-item :value="0">
-        <v-card>
-          <v-card-text>Descrizione</v-card-text>
-        </v-card>
+        <descrizione-mov></descrizione-mov>
       </v-tab-item>
       <v-tab-item :value="1">
         <v-card>
@@ -22,6 +19,9 @@
 </template>
 
 <script>
+
+import descrizioneMov from './DescrizioneMov.vue'
+
 export default {
   data() {
     return {
@@ -32,6 +32,9 @@ export default {
     tab() {
       return this.$store.getters.getTab           
     },
+  },
+  components: {
+    'descrizione-mov': descrizioneMov
   },
 }
 </script>
