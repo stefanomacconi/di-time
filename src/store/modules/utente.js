@@ -54,6 +54,10 @@ const actions = {
                 dispatch('fetchMovimenti').then(() => {
                     router.push('/movimenti')
                 })
+                // fill elenco causali, cdl and cdc (no need to be synchronous)
+                dispatch('fetchCausali')
+                dispatch('fetchElencoCdl')
+                dispatch('fetchElencoCdc')
             })
         }).catch(error => {
             // eslint-disable-next-line
@@ -63,6 +67,9 @@ const actions = {
     },
     logout({ commit }) {
         commit('clearAuthData')
+        commit('clearMov')
+        commit('clearMovData')
+        commit('clearMovimentiData')
         router.replace('/login')
     },
     // eslint-disable-next-line

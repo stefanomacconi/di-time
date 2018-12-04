@@ -65,7 +65,8 @@
           </v-menu>
         </v-flex>
         <v-flex xs2 md2 lg2>
-          <v-text-field :value="calcTotTime(false)" label="Tot" single-line readonly></v-text-field>
+          <v-text-field :value="calcTotTime(false)" :rules="tempoRules" label="Tot" single-line readonly required>
+          </v-text-field>
         </v-flex>
         <!-- *** GIORNATA *** -->
         <v-flex xs12>
@@ -123,19 +124,19 @@
           <v-subheader class="subtitle">Descrizione</v-subheader>
         </v-flex>  
         <v-flex xs12>
-          <v-textarea rows="2" label="Nota"></v-textarea>
+          <v-textarea rows="2" v-model="nota" label="Nota" :rules="this.notaRules" required></v-textarea>
         </v-flex>
         <v-flex xs6 md4 lg3>
-          <v-text-field label="Posizione"></v-text-field>
+          <v-text-field v-model="posizione" label="Posizione"></v-text-field>
         </v-flex>
         <v-flex xs6 md4 lg3>
-           <v-select :items="causali" label="Causali"></v-select>
+           <v-select :items="causali" v-model="causale" label="Causale"></v-select>
         </v-flex>
         <v-flex xs6 md4 lg3>
-           <v-select :items="cdl" label="CdL"></v-select>
+           <v-select :items="cdlList" v-model="cdl" label="CdL"></v-select>
         </v-flex>
         <v-flex xs6 md4 lg3>
-           <v-select :items="cdc" label="CdC"></v-select>
+           <v-select :items="cdcList" v-model="cdc" label="CdC"></v-select>
         </v-flex>
       </v-layout>  
     </v-container>
@@ -148,41 +149,142 @@ import moment from 'moment'
 
 import utilities from "../../utilitiesMixin.js"
 
+const campoObbligatorio = "Campo obbligatorio"
+
 export default {
   data: (vm) => ({
     valid: false,
     commessa: "",
     commessaRules: [
-      v => !!v || 'Commessa is required',
-      v => v.length <= 8 || 'Name must be less than 8 characters'
+      v => !!v || campoObbligatorio,
+      v => v.length <= 8 || 'Commessa must be less than 8 characters'
+    ],
+    tempoRules: [
+      v => !!v || "Tempo",
+    ],
+    notaRules: [
+      v => !!v || campoObbligatorio,
     ],
     date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menuDate: false,
-    timeG1: null,
     menuTimeG1: false,
-    timeG2: null,
     menuTimeG2: false,
-    timeG3: null,
     menuTimeG3: false,
-    timeG4: null,
     menuTimeG4: false,
-    timeA1: null,
     menuTimeA1: false,
-    timeA2: null,
     menuTimeA2: false,
-    timeA3: null,
     menuTimeA3: false,
-    timeA4: null,
     menuTimeA4: false,
-    causali: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    cdl: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    cdc: ['Foo', 'Bar', 'Fizz', 'Buzz'],
   }),
   computed: {
     computedDateFormatted () {
       return this.formatDate(this.date)
-    }
+    },
+    timeA1: {
+      get () {
+        return this.$store.getters.getTimeA1
+      },
+      set (value) {
+        this.$store.commit('setTimeA1', value)
+      }
+    },
+    timeA2: {
+      get () {
+        return this.$store.getters.getTimeA2
+      },
+      set (value) {
+        this.$store.commit('setTimeA2', value)
+      }
+    },
+    timeA3: {
+      get () {
+        return this.$store.getters.getTimeA3
+      },
+      set (value) {
+        this.$store.commit('setTimeA3', value)
+      }
+    },
+    timeA4: {
+      get () {
+        return this.$store.getters.getTimeA4
+      },
+      set (value) {
+        this.$store.commit('setTimeA4', value)
+      }
+    },
+    timeG1: {
+      get () {
+        return this.$store.getters.getTimeG1
+      },
+      set (value) {
+        this.$store.commit('setTimeG1', value)
+      }
+    },
+    timeG2: {
+      get () {
+        return this.$store.getters.getTimeG2
+      },
+      set (value) {
+        this.$store.commit('setTimeG2', value)
+      }
+    },
+    timeG3: {
+      get () {
+        return this.$store.getters.getTimeG3
+      },
+      set (value) {
+        this.$store.commit('setTimeG3', value)
+      }
+    },
+    timeG4: {
+      get () {
+        return this.$store.getters.getTimeG4
+      },
+      set (value) {
+        this.$store.commit('setTimeG4', value)
+      }
+    },
+    nota: {
+      get () {
+        return this.$store.getters.getNota
+      },
+      set (value) {
+        this.$store.commit('setNota', value)
+      }
+    },
+    causale: {
+      get () {
+        return this.$store.getters.getCausale
+      },
+      set (value) {
+        this.$store.commit('setCausale', value)
+      }
+    },
+    cdl: {
+      get () {
+        return this.$store.getters.getCdl
+      },
+      set (value) {
+        this.$store.commit('setCdl', value)
+      }
+    },
+    cdc: {
+      get () {
+        return this.$store.getters.getCdc
+      },
+      set (value) {
+        this.$store.commit('setCdc', value)
+      }
+    },
+    posizione: {
+      get () {
+        return this.$store.getters.getPosizione
+      },
+      set (value) {
+        this.$store.commit('setPosizione', value)
+      }
+    },
   },
   watch: {
     date () {
@@ -211,17 +313,17 @@ export default {
       var times
       if (giornata) {
         times = [
-          this.timeG1,
-          this.timeG2,
-          this.timeG3,
-          this.timeG4
+          this.$store.getters.getTimeG1,
+          this.$store.getters.getTimeG2,
+          this.$store.getters.getTimeG3,
+          this.$store.getters.getTimeG4
         ]
       } else {
         times = [
-          this.timeA1,
-          this.timeA2,
-          this.timeA3,
-          this.timeA4
+          this.$store.getters.getTimeA1,
+          this.$store.getters.getTimeA2,
+          this.$store.getters.getTimeA3,
+          this.$store.getters.getTimeA4
         ]
       }
       var t1 = moment(this.getTimeFromInteger(times[0]), "HH:mm")

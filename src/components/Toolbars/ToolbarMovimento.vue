@@ -12,8 +12,8 @@
       <v-spacer></v-spacer>
         <!-- TODO passarli con props -->
         <v-toolbar-items v-if="this.isNewMov">
-          <v-btn icon>
-            <v-icon color="green lighten-2">check_circle</v-icon>
+          <v-btn icon color="green lighten-2">
+            <v-icon>check</v-icon>
           </v-btn>
         </v-toolbar-items>
         <v-toolbar-items v-else>
@@ -49,12 +49,15 @@ export default {
     this.$store.dispatch('setTab', 0)
     // set in store if is a new mov or not
     if (this.$route.params.id) {
+      // edit
       this.$store.dispatch('setIsNewMov', false)
       this.isNewMov = false
     }
     else {
+      // new
       this.$store.dispatch('setIsNewMov', true) 
       this.isNewMov = true
+      this.$store.dispatch('clearMov') 
     }
   },
   data() {

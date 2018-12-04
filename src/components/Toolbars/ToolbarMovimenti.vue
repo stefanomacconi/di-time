@@ -13,12 +13,13 @@
         </v-btn>
       </v-toolbar-items>
       <v-toolbar-items class="hidden-sm-and-down">
+        <v-divider dark vertical></v-divider>
         <v-btn @click="logout" flat>
           <v-icon left>{{ menuLogout.icon }}</v-icon>
           {{ menuLogout.title }}
         </v-btn>
       </v-toolbar-items>
-      <v-menu right bottom origin="bottom right" transition="v-scale-transition">
+      <!-- <v-menu right bottom origin="bottom right" transition="v-scale-transition">
         <v-btn dark icon slot="activator">
           <v-icon>more_vert</v-icon>
         </v-btn>
@@ -32,7 +33,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-      </v-menu>
+      </v-menu> -->
     </v-toolbar>
     <v-navigation-drawer v-model="drawer" temporary app>
       <v-toolbar flat>
