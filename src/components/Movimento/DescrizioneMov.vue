@@ -65,7 +65,7 @@
           </v-menu>
         </v-flex>
         <v-flex xs2 md2 lg2>
-          <v-text-field :value="calcTotTime(false)" :rules="tempoRules" label="Tot" single-line readonly required>
+          <v-text-field :value="totTimeA" :rules="tempoRules" label="Tot" single-line readonly required>
           </v-text-field>
         </v-flex>
         <!-- *** GIORNATA *** -->
@@ -117,7 +117,7 @@
           </v-menu>
         </v-flex>
         <v-flex xs2 md2 lg2>
-          <v-text-field :value="calcTotTime(true)" label="Tot" single-line readonly></v-text-field>
+          <v-text-field :value="totTimeG" label="Tot" single-line readonly></v-text-field>
         </v-flex>
         <!-- *** DESCRIZIONE *** -->
         <v-flex xs12>
@@ -176,10 +176,19 @@ export default {
     menuTimeA2: false,
     menuTimeA3: false,
     menuTimeA4: false,
+    causali: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+    cdlList: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+    cdcList: ['Foo', 'Bar', 'Fizz', 'Buzz']
   }),
   computed: {
     computedDateFormatted () {
       return this.formatDate(this.date)
+    },
+    totTimeG() {
+      return this.calcTotTime(true)
+    },
+    totTimeA() {
+      return this.calcTotTime(false)
     },
     timeA1: {
       get () {
@@ -309,7 +318,7 @@ export default {
     showDialogCommessa() {
       console.log("prova")
     },
-    calcTotTime(giornata) {
+     calcTotTime(giornata) {
       var times
       if (giornata) {
         times = [
@@ -334,9 +343,9 @@ export default {
       var pomeriggio = t4.diff(t3)
       var totale = moment(mattino).add(pomeriggio)
       totale = totale - 3600000 // Non so perché moment calcola un'ora in più. Comunque la tolgo.
-      if (totale)
+      if (!isNaN(totale))
         return moment(totale).format("HH:mm")
-    }
+    },
   }
 }
 </script>

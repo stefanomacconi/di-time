@@ -11,6 +11,10 @@
         <v-btn icon>
           <v-icon>event</v-icon>
         </v-btn>
+        <v-divider dark vertical></v-divider>
+        <v-btn icon>
+          <v-icon>search</v-icon>
+        </v-btn>
       </v-toolbar-items>
       <v-toolbar-items class="hidden-sm-and-down">
         <v-divider dark vertical></v-divider>
@@ -74,7 +78,7 @@ export default {
   data: () => ({
     drawer: false,
     menus: [
-      {title: "Nuovo Movimento", to: "/nuovo", icon: "note_add"}
+      {title: "Nuovo Movimento", to: "/movimento", icon: "note_add"}
     ],
     menuLogout : {title: "Logout", icon: "lock"},
   }),
