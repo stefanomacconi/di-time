@@ -133,10 +133,10 @@
            <v-select :items="causali" v-model="causale" label="Causale"></v-select>
         </v-flex>
         <v-flex xs6 md4 lg3>
-           <v-select :items="cdlList" v-model="cdl" label="CdL"></v-select>
+           <v-select :items="elencoCdl" v-model="cdl" label="CdL"></v-select>
         </v-flex>
         <v-flex xs6 md4 lg3>
-           <v-select :items="cdcList" v-model="cdc" label="CdC"></v-select>
+           <v-select :items="elencoCdc" v-model="cdc" label="CdC"></v-select>
         </v-flex>
       </v-layout>  
     </v-container>
@@ -176,9 +176,6 @@ export default {
     menuTimeA2: false,
     menuTimeA3: false,
     menuTimeA4: false,
-    causali: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    cdlList: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-    cdcList: ['Foo', 'Bar', 'Fizz', 'Buzz']
   }),
   computed: {
     computedDateFormatted () {
@@ -285,6 +282,30 @@ export default {
       set (value) {
         this.$store.commit('setCdc', value)
       }
+    },
+    causali() {
+      const causali = this.$store.getters.getCausali
+      var elencoCausali = [""]
+      causali.forEach(causale => {
+        elencoCausali.push(causale.codice + " - " + causale.descrizione)
+      });
+      return elencoCausali
+    },
+    elencoCdl() {
+      const cdl = this.$store.getters.getElencoCdl
+      var elencoCdl = [""]
+      cdl.forEach(centro => {
+        elencoCdl.push(centro.codice + " - " + centro.descrizione)
+      });
+      return elencoCdl
+    },
+    elencoCdc() {
+      const cdc = this.$store.getters.getElencoCdc
+      var elencoCdc = [""]
+      cdc.forEach(centro => {
+        elencoCdc.push(centro.codice + " - " + centro.descrizione)
+      });
+      return elencoCdc
     },
     posizione: {
       get () {

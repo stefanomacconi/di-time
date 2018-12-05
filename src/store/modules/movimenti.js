@@ -121,6 +121,9 @@ const getters = {
     getMovimenti(state) {
         return state.movimenti
     },
+    getCausali(state) {
+        return state.causali
+    },
     getElencoCdl(state) {
         return state.elencoCdl
     },
