@@ -3,12 +3,14 @@
     <v-container grid-list-md>
       <v-layout row wrap>
         <v-flex xs6 md6 lg6>
-        <v-menu ref="menuDate" :close-on-content-click="false" v-model="menuDate" :nudge-right="40" 
+        <!-- *** DATA e COMMESSA *** -->
+        <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
           lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
           <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
             prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
           </v-text-field>
-          <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+          <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title @input="menu1 = false">
+          </v-date-picker>
         </v-menu>
         </v-flex>
         <v-flex xs6 md6 lg6>
@@ -124,7 +126,8 @@
           <v-subheader class="subtitle">Descrizione</v-subheader>
         </v-flex>  
         <v-flex xs12>
-          <v-textarea rows="2" v-model="nota" label="Nota" :rules="this.notaRules" required></v-textarea>
+          <v-textarea rows="3" v-model="nota" prepend-icon="notes" label="Nota" :rules="this.notaRules" required>
+          </v-textarea>
         </v-flex>
         <v-flex xs6 md4 lg3>
           <v-text-field v-model="posizione" label="Posizione"></v-text-field>
@@ -154,7 +157,6 @@ const campoObbligatorio = "Campo obbligatorio"
 export default {
   data: (vm) => ({
     valid: false,
-    commessa: "",
     commessaRules: [
       v => !!v || campoObbligatorio,
       v => v.length <= 8 || 'Commessa must be less than 8 characters'
@@ -165,7 +167,6 @@ export default {
     notaRules: [
       v => !!v || campoObbligatorio,
     ],
-    date: new Date().toISOString().substr(0, 10),
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menuDate: false,
     menuTimeG1: false,
@@ -185,7 +186,9 @@ export default {
       return this.calcTotTime(true)
     },
     totTimeA() {
-      return this.calcTotTime(false)
+      const value = this.calcTotTime(false)
+      this.$store.commit('setTempo', value)
+      return value 
     },
     timeA1: {
       get () {
@@ -249,6 +252,22 @@ export default {
       },
       set (value) {
         this.$store.commit('setTimeG4', value)
+      }
+    },
+    commessa: {
+      get () {
+        return this.$store.getters.getCommessa
+      },
+      set (value) {
+        this.$store.commit('setCommessa', value)
+      }
+    },
+    date: {
+      get () {
+        return this.$store.getters.getData
+      },
+      set (value) {
+        this.$store.commit('setData', value)
       }
     },
     nota: {
@@ -335,6 +354,7 @@ export default {
       const [month, day, year] = date.split('/')
       return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`
     },
+    allowedDates: val => val >= new Date().toISOString().substr(0, 10),
     allowedStep: m => m % 5 === 0,
     showDialogCommessa() {
       console.log("prova")
@@ -365,7 +385,7 @@ export default {
       var totale = moment(mattino).add(pomeriggio)
       totale = totale - 3600000 // Non so perché moment calcola un'ora in più. Comunque la tolgo.
       if (!isNaN(totale))
-        return moment(totale).format("HH:mm")
+        return moment(totale).format("HH.mm")
     },
   }
 }

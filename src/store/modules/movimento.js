@@ -2,7 +2,10 @@ const state = {
     tab: 0,
     isNewMov: false,
     movimento: {
-        times: {
+        data: new Date().toISOString().substr(0, 10),
+        commessa: "",
+        tempo: null,
+        tempi: {
             timeA1: null,
             timeA2: null,
             timeA3: null,
@@ -28,50 +31,55 @@ const mutations = {
         state.isNewMov = value
     },
     clearMov(state) {
-        state.movimento.times.timeG1 = null 
-        state.movimento.times.timeG2 = null 
-        state.movimento.times.timeG3 = null 
-        state.movimento.times.timeG4 = null 
-        state.movimento.times.timeA1 = null 
-        state.movimento.times.timeA2 = null 
-        state.movimento.times.timeA3 = null 
-        state.movimento.times.timeA4 = null 
+        state.movimento.tempi.timeG1 = null 
+        state.movimento.tempi.timeG2 = null 
+        state.movimento.tempi.timeG3 = null 
+        state.movimento.tempi.timeG4 = null 
+        state.movimento.tempi.timeA1 = null 
+        state.movimento.tempi.timeA2 = null 
+        state.movimento.tempi.timeA3 = null 
+        state.movimento.tempi.timeA4 = null 
         state.movimento.nota = "" 
         state.movimento.causale = null 
         state.movimento.posizione = null 
         state.movimento.cdl = null 
         state.movimento.cdc = null 
+        state.movimento.data = new Date().toISOString().substr(0, 10) 
+        state.movimento.commessa = "" 
+        state.movimento.tempo = null 
     },
-    clearMovData(state) {
-        state.nota = "",
-        state.causale = null,
-        state.cdl = null,
-        state.cdc = null,
-        state.posizione = null
+    setData(state, value) {
+        state.movimento.data = value
+    },
+    setCommessa(state, value) {
+        state.movimento.commessa = value
+    },
+    setTempo(state, value) {
+        state.movimento.tempo = value
     },
     setTimeG1(state, value) {
-        state.movimento.times.timeG1 = value
+        state.movimento.tempi.timeG1 = value
     },
     setTimeG2(state, value) {
-        state.movimento.times.timeG2 = value
+        state.movimento.tempi.timeG2 = value
     },
     setTimeG3(state, value) {
-        state.movimento.times.timeG3 = value
+        state.movimento.tempi.timeG3 = value
     },
     setTimeG4(state, value) {
-        state.movimento.times.timeG4 = value
+        state.movimento.tempi.timeG4 = value
     },
     setTimeA1(state, value) {
-        state.movimento.times.timeA1 = value
+        state.movimento.tempi.timeA1 = value
     },
     setTimeA2(state, value) {
-        state.movimento.times.timeA2 = value
+        state.movimento.tempi.timeA2 = value
     },
     setTimeA3(state, value) {
-        state.movimento.times.timeA3 = value
+        state.movimento.tempi.timeA3 = value
     },
     setTimeA4(state, value) {
-        state.movimento.times.timeA4 = value
+        state.movimento.tempi.timeA4 = value
     },
     setNota(state, value) {
         state.movimento.nota = value
@@ -99,6 +107,15 @@ const actions = {
     },
     clearMov({ commit }, value) {
         commit('clearMov', value)
+    },
+    setData({ commit }, value) {
+        commit('setData', value)
+    },
+    setCommessa({ commit }, value) {
+        commit('setCommessa', value)
+    },
+    setTempo({ commit }, value) {
+        commit('setTempo', value)
     },
     setTimeG1({ commit }, value) {
         commit('setTimeG1', value)
@@ -149,34 +166,43 @@ const getters = {
         return state.isNewMov
     },
     getTimeG1(state) {
-        return state.movimento.times.timeG1
+        return state.movimento.tempi.timeG1
     },
     getTimeG2(state) {
-        return state.movimento.times.timeG2
+        return state.movimento.tempi.timeG2
     },
     getTimeG3(state) {
-        return state.movimento.times.timeG3
+        return state.movimento.tempi.timeG3
     },
     getTimeG4(state) {
-        return state.movimento.times.timeG4
+        return state.movimento.tempi.timeG4
     },
     getTimeA1(state) {
-        return state.movimento.times.timeA1
+        return state.movimento.tempi.timeA1
     },
     getTimeA2(state) {
-        return state.movimento.times.timeA2
+        return state.movimento.tempi.timeA2
     },
     getTimeA3(state) {
-        return state.movimento.times.timeA3
+        return state.movimento.tempi.timeA3
     },
     getTimeA4(state) {
-        return state.movimento.times.timeA4
+        return state.movimento.tempi.timeA4
     },
     getNota(state) {
         return state.movimento.nota
     },
     getCausale(state) {
         return state.movimento.causale
+    },
+    getCommessa(state) {
+        return state.movimento.commessa
+    },
+    getData(state) {
+        return state.movimento.data
+    },
+    getTempo(state) {
+        return state.movimento.tempo
     },
     getPosizione(state) {
         return state.movimento.posizione

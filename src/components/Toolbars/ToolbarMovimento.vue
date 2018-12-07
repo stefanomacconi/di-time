@@ -12,7 +12,7 @@
       <v-spacer></v-spacer>
         <!-- TODO passarli con props -->
         <v-toolbar-items v-if="this.isNewMov">
-          <v-btn icon color="green lighten-2">
+          <v-btn icon color="green lighten-2" @click="saveMov">
             <v-icon>check</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -24,7 +24,7 @@
             <v-icon>attach_file</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
-          <v-btn icon>
+          <v-btn icon @click="saveMov">
             <v-icon color="green lighten-2">check_circle</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
@@ -82,6 +82,14 @@ export default {
     },
     selectTab(index) {
       this.$store.dispatch('setTab', index)
+    },
+    saveMov() {
+      // check obligatory fields
+      if (!this.$store.getters.getCommessa || !this.$store.getters.getTempo)
+        return
+      // save movement
+      // TODO fare post che salva il movimento, 
+      // non ha senso recuperare le info perché dovrebbero essere già nel movimento.js
     }
   }
 }

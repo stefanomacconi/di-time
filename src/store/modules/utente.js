@@ -68,7 +68,6 @@ const actions = {
     logout({ commit }) {
         commit('clearAuthData')
         commit('clearMov')
-        commit('clearMovData')
         commit('clearMovimentiData')
         router.replace('/login')
     },
