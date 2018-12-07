@@ -43,6 +43,11 @@
 </template>
 
 <script>
+
+import moment from 'moment'
+
+import axios from "axios"
+
 export default {
   created() {
     // set current tab to the first one
@@ -85,11 +90,39 @@ export default {
     },
     saveMov() {
       // check obligatory fields
-      if (!this.$store.getters.getCommessa || !this.$store.getters.getTempo)
+      if (!this.$store.getters.getCommessa || !this.$store.getters.getTempo) {
+        // TODO mettere qui un qualcosa che faccia comparire rossi i campi non immessi
         return
+      }
       // save movement
-      // TODO fare post che salva il movimento, 
-      // non ha senso recuperare le info perché dovrebbero essere già nel movimento.js
+      const date = moment(this.$store.getters.getData, "YYYY-MM-DD").valueOf()
+      axios.post('/movimento/lavorazione/'  + this.$store.getters.getDipendente, 
+        {
+            commessa: this.$store.getters.getCommessa,
+            descrizione: this.$store.getters.getNota,
+            // TODO gestire solo il codice della causale, idem per cdl e cdc
+            causale: this.$store.getters.getCausale,
+            cdl: this.$store.getters.getCdl,
+            cdc: this.$store.getters.getCdc,
+            data: date,
+            posizione: this.$store.getters.getPosizione,
+            tempo: this.$store.getters.getTempo,
+            oraInizioMattino: this.$store.getters.getTimeG1,
+            oraFineMattino: this.$store.getters.getTimeG2,
+            oraInizioPomeriggio: this.$store.getters.getTimeG3,
+            oraFinePomeriggio: this.$store.getters.getTimeG4,
+            oraInizioAttMattino: this.$store.getters.getTimeA1,
+            oraFineAttMattino: this.$store.getters.getTimeA2,
+            oraInizioAttPomeriggio: this.$store.getters.getTimeA3,
+            oraFineAttPomeriggio: this.$store.getters.getTimeA4
+        }).then(res => {
+          // eslint-disable-next-line
+          console.log(res)
+        }).catch(error => {
+          // eslint-disable-next-line
+          console.log(error)
+          this.$store.dispatch('handleError', error.response.data)
+        })
     }
   }
 }

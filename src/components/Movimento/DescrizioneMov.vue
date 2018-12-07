@@ -130,7 +130,7 @@
           </v-textarea>
         </v-flex>
         <v-flex xs6 md4 lg3>
-          <v-text-field v-model="posizione" label="Posizione"></v-text-field>
+          <v-text-field v-model="posizione" :rules="this.posizioneRules" label="Posizione"></v-text-field>
         </v-flex>
         <v-flex xs6 md4 lg3>
            <v-select :items="causali" v-model="causale" label="Causale"></v-select>
@@ -159,13 +159,16 @@ export default {
     valid: false,
     commessaRules: [
       v => !!v || campoObbligatorio,
-      v => v.length <= 8 || 'Commessa must be less than 8 characters'
+      v => v.length <= 8 || "commessa dev'essere < 8 caratteri"
     ],
     tempoRules: [
-      v => !!v || "Tempo",
+      v => !!v || "Tempo"
     ],
     notaRules: [
-      v => !!v || campoObbligatorio,
+      v => !!v || campoObbligatorio
+    ],
+    posizioneRules: [
+      v => !isNaN(v) || 'posizione deve contenere numeri'
     ],
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menuDate: false,
