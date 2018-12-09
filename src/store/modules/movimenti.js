@@ -4,7 +4,8 @@ const state = {
     movimenti: [],
     causali: [],
     elencoCdl: [],
-    elencoCdc: []
+    elencoCdc: [],
+    definizioniNotaSpese: []
 }
 
 const mutations = {
@@ -12,7 +13,8 @@ const mutations = {
         state.movimenti = [],
         state.elencoCdc = [],
         state.elencoCdl = [],
-        state.causali = []
+        state.causali = [],
+        state.definizioniNotaSpese = []
     },
     setMovimenti(state, movimenti) {
         state.movimenti = movimenti
@@ -48,6 +50,16 @@ const mutations = {
             } 
             state.elencoCdc.push(data)
          })
+    },
+    setDefinizioniNotaSpese(state, definizioni) {
+        definizioni.forEach(definizione => {
+            const data = {
+                codice: definizione.codice,
+                descrizione: definizione.descrizione,
+                codiceTipoMovimento: definizione.codiceTipoMovimento
+            }
+            state.definizioniNotaSpese.push(data)
+        })
     }
 }
 
@@ -88,31 +100,44 @@ const actions = {
                 // eslint-disable-next-line
                 console.log(error)
                 dispatch('handleError', error.response.data)
-            })
-        },
-        fetchElencoCdl({ commit, dispatch }) {
-            axios.get("/cdl")
-                .then(res => {
-                    // eslint-disable-next-line
-                    console.log(res)
-                    commit('setElencoCdl', res.data)
-                }).catch(error => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    dispatch('handleError', error.response.data)
-                })
-            },
-        fetchElencoCdc({ commit, dispatch }) {
-            axios.get("/cdc")
-                .then(res => {
-                    // eslint-disable-next-line
-                    console.log(res)
-                    commit('setElencoCdc', res.data)
-                }).catch(error => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    dispatch('handleError', error.response.data)
-                })
+        })
+    },
+    fetchElencoCdl({ commit, dispatch }) {
+        axios.get("/cdl")
+            .then(res => {
+                // eslint-disable-next-line
+                console.log(res)
+                commit('setElencoCdl', res.data)
+            }).catch(error => {
+                // eslint-disable-next-line
+                console.log(error)
+                dispatch('handleError', error.response.data)
+        })
+    },
+    fetchElencoCdc({ commit, dispatch }) {
+        axios.get("/cdc")
+            .then(res => {
+                // eslint-disable-next-line
+                console.log(res)
+                commit('setElencoCdc', res.data)
+            }).catch(error => {
+                // eslint-disable-next-line
+                console.log(error)
+                dispatch('handleError', error.response.data)
+        })
+
+    },
+    fetchDefinizioneNotaSpese({ commit, dispatch }) {
+        axios.get("/movimento/supplementare")
+            .then(res => {
+                // eslint-disable-next-line
+                console.log(res)
+                commit('setDefinizioniNotaSpese', res.data)
+            }).catch(error => {
+                // eslint-disable-next-line
+                console.log(error)
+                dispatch('handleError', error.response.data)
+        })
 
     },
 }
@@ -129,6 +154,9 @@ const getters = {
     },
     getElencoCdc(state) {
         return state.elencoCdc
+    },
+    getDefinizioniNotaSpese(state) {
+        return state.definizioniNotaSpese
     },
 }
 

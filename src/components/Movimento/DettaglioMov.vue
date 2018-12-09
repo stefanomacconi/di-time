@@ -5,14 +5,10 @@
         <descrizione-mov></descrizione-mov>
       </v-tab-item>
       <v-tab-item :value="1">
-        <v-card>
-          <v-card-text>Nota Spese</v-card-text>
-        </v-card>
+          <nota-spese-mov></nota-spese-mov>
       </v-tab-item>
       <v-tab-item :value="2">
-        <v-card>
-          <v-card-text>Lista</v-card-text>
-        </v-card>
+          <lista-articoli-mov></lista-articoli-mov>
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -21,6 +17,8 @@
 <script>
 
 import descrizioneMov from './DescrizioneMov.vue'
+import notaSpeseMov from './NotaSpeseMov.vue'
+import listaArticoliMov from './ListaArticoliMov.vue'
 
 export default {
   data() {
@@ -34,7 +32,9 @@ export default {
     },
   },
   components: {
-    'descrizione-mov': descrizioneMov
+    'descrizione-mov': descrizioneMov,
+    'nota-spese-mov': notaSpeseMov,
+    'lista-articoli-mov': listaArticoliMov
   },
 }
 </script>

@@ -54,7 +54,8 @@ const actions = {
                 dispatch('fetchMovimenti').then(() => {
                     router.push('/movimenti')
                 })
-                // fill elenco causali, cdl and cdc (no need to be synchronous)
+                // fill def nota spese, elenco causali, cdl and cdc (no need to be synchronous)
+                dispatch('fetchDefinizioneNotaSpese')
                 dispatch('fetchCausali')
                 dispatch('fetchElencoCdl')
                 dispatch('fetchElencoCdc')

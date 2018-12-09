@@ -96,6 +96,14 @@ export default {
       }
       // save movement
       const date = moment(this.$store.getters.getData, "YYYY-MM-DD").valueOf()
+      const oraInizioMattino = this.$store.getters.getTimeG1 ? this.$store.getters.getTimeG1.replace(":", "") : this.$store.getters.getTimeG1
+      const oraFineMattino = this.$store.getters.getTimeG2 ? this.$store.getters.getTimeG2.replace(":", "") : this.$store.getters.getTimeG2
+      const oraInizioPomeriggio = this.$store.getters.getTimeG3 ? this.$store.getters.getTimeG3.replace(":", "") : this.$store.getters.getTimeG3
+      const oraFinePomeriggio = this.$store.getters.getTimeG4 ? this.$store.getters.getTimeG4.replace(":", "") : this.$store.getters.getTimeG4
+      const oraInizioAttMattino = this.$store.getters.getTimeA1 ? this.$store.getters.getTimeA1.replace(":", "") : this.$store.getters.getTimeA1
+      const oraFineAttMattino = this.$store.getters.getTimeA2 ? this.$store.getters.getTimeA2.replace(":", "") : this.$store.getters.getTimeA2
+      const oraInizioAttPomeriggio = this.$store.getters.getTimeA3 ? this.$store.getters.getTimeA3.replace(":", "") : this.$store.getters.getTimeA3
+      const oraFineAttPomeriggio = this.$store.getters.getTimeA4 ? this.$store.getters.getTimeA4.replace(":", "") : this.$store.getters.getTimeA4
       axios.post('/movimento/lavorazione/'  + this.$store.getters.getDipendente, 
         {
             commessa: this.$store.getters.getCommessa,
@@ -107,14 +115,14 @@ export default {
             data: date,
             posizione: this.$store.getters.getPosizione,
             tempo: this.$store.getters.getTempo,
-            oraInizioMattino: this.$store.getters.getTimeG1,
-            oraFineMattino: this.$store.getters.getTimeG2,
-            oraInizioPomeriggio: this.$store.getters.getTimeG3,
-            oraFinePomeriggio: this.$store.getters.getTimeG4,
-            oraInizioAttMattino: this.$store.getters.getTimeA1,
-            oraFineAttMattino: this.$store.getters.getTimeA2,
-            oraInizioAttPomeriggio: this.$store.getters.getTimeA3,
-            oraFineAttPomeriggio: this.$store.getters.getTimeA4
+            oraInizioMattino: oraInizioMattino,
+            oraFineMattino: oraFineMattino,
+            oraInizioPomeriggio: oraInizioPomeriggio,
+            oraFinePomeriggio: oraFinePomeriggio,
+            oraInizioAttMattino: oraInizioAttMattino,
+            oraFineAttMattino: oraFineAttMattino,
+            oraInizioAttPomeriggio: oraInizioAttPomeriggio,
+            oraFineAttPomeriggio: oraFineAttPomeriggio
         }).then(res => {
           // eslint-disable-next-line
           console.log(res)

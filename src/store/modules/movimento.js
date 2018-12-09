@@ -16,6 +16,7 @@ const state = {
             timeG4: null,
         },
         nota: "",
+        notaSpese: [],
         causale: null,
         cdl: null,
         cdc: null,
@@ -47,6 +48,7 @@ const mutations = {
         state.movimento.data = new Date().toISOString().substr(0, 10) 
         state.movimento.commessa = "" 
         state.movimento.tempo = null 
+        state.movimento.notaSpese = []
     },
     setData(state, value) {
         state.movimento.data = value
@@ -95,6 +97,12 @@ const mutations = {
     },
     setCdc(state, value) {
         state.movimento.cdc = value
+    },
+    addInNotaSpese(state, value) {
+        state.movimento.notaSpese.push(value)
+    },
+    removeInNotaSpese(state, value) {
+        state.movimento.notaSpese.splice(value, 1)
     },
 }
 
@@ -155,7 +163,14 @@ const actions = {
     },
     setCdc({ commit }, value) {
         commit('setCdc', value)
-    }
+    },
+    updateNotaSpese({ commit }, nota) {
+        var notaSpese = state.movimento.notaSpese
+        var index = notaSpese.map(n => { return n.codice }).indexOf(nota.codice)
+        if (index != -1) 
+            commit("removeInNotaSpese", index)
+        commit('addInNotaSpese', nota)
+    },
 }
 
 const getters = {
@@ -212,7 +227,17 @@ const getters = {
     },
     getCdc(state) {
         return state.movimento.cdc
-    }
+    },
+    getNotaSpese(state) {
+        return state.movimento.notaSpese
+    },
+    getNotaInNotaSpese: (state) => (codice) => {
+        var notaSpese = state.movimento.notaSpese
+        var nota = notaSpese.filter(obj => {
+            return obj.codice === codice
+        })
+        return nota 
+    },
 }
 
 export default {
