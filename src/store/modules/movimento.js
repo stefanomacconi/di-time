@@ -50,6 +50,35 @@ const mutations = {
         state.movimento.tempo = null 
         state.movimento.notaSpese = []
     },
+    setMovimento(state, movimento) {
+        if (movimento.oraInizioMattino && movimento.oraInizioMattino != 0)
+            state.movimento.tempi.timeG1 = getTimeFromInteger(movimento.oraInizioMattino)
+        if (movimento.oraFineMattino && movimento.oraFineMattino != 0)
+            state.movimento.tempi.timeG2 = getTimeFromInteger(movimento.oraFineMattino) 
+        if (movimento.oraInizioPomeriggio && movimento.oraInizioPomeriggio != 0)
+            state.movimento.tempi.timeG3 = getTimeFromInteger(movimento.oraInizioPomeriggio) 
+        if (movimento.oraFinePomeriggio && movimento.oraFinePomeriggio != 0)
+            state.movimento.tempi.timeG4 = getTimeFromInteger(movimento.oraFinePomeriggio) 
+        if (movimento.oraInizioAttMattino && movimento.oraInizioAttMattino != 0)
+            state.movimento.tempi.timeA1 = getTimeFromInteger(movimento.oraInizioAttMattino) 
+        if (movimento.oraFineAttMattino && movimento.oraFineAttMattino != 0)
+            state.movimento.tempi.timeA2 = getTimeFromInteger(movimento.oraFineAttMattino) 
+        if (movimento.oraInizioAttPomeriggio && movimento.oraInizioAttPomeriggio != 0)
+            state.movimento.tempi.timeA3 = getTimeFromInteger(movimento.oraInizioAttPomeriggio) 
+        if (movimento.oraFineAttPomeriggio && movimento.oraFineAttPomeriggio != 0)
+            state.movimento.tempi.timeA4 = getTimeFromInteger(movimento.oraFineAttPomeriggio)  
+        state.movimento.nota = movimento.descrizione
+        state.movimento.causale = movimento.causale
+        state.movimento.posizione = movimento.posizione
+        if (movimento.cdl && movimento.cdl != 0) 
+            state.movimento.cdl = movimento.cdl  + " - " + movimento.descrizioneCdl
+        if (movimento.cdc && movimento.cdc != 0)
+            state.movimento.cdc = movimento.cdc + " - " + movimento.descrizioneCdc
+        state.movimento.data = new Date(movimento.data).toISOString().substr(0, 10) 
+        state.movimento.commessa = movimento.commessa 
+        state.movimento.tempo = movimento.tempo
+        state.movimento.notaSpese = movimento.notaSpese
+    },
     setData(state, value) {
         state.movimento.data = value
     },
@@ -103,7 +132,7 @@ const mutations = {
     },
     removeInNotaSpese(state, value) {
         state.movimento.notaSpese.splice(value, 1)
-    },
+    }
 }
 
 const actions = {
@@ -113,8 +142,8 @@ const actions = {
     setIsNewMov({ commit }, value) {
         commit('setIsNewMov', value)
     },
-    clearMov({ commit }, value) {
-        commit('clearMov', value)
+    clearMov({ commit }) {
+        commit('clearMov')
     },
     setData({ commit }, value) {
         commit('setData', value)
@@ -171,6 +200,9 @@ const actions = {
             commit("removeInNotaSpese", index)
         commit('addInNotaSpese', nota)
     },
+    setMovimento({ commit }, movimento) {
+        commit('setMovimento', movimento)
+    }
 }
 
 const getters = {
@@ -238,6 +270,19 @@ const getters = {
         })
         return nota 
     },
+}
+
+import moment from "moment"
+// TODO gestire meglio questa utility
+// con un'unica export default != ai mixin
+const getTimeFromInteger = function (time) {
+    if (!time)
+        return null
+    var min = (time).toString().slice(-2)
+    var hour = (time).toString().substring(0, (time).toString().length - 2)
+    if (min && hour) 
+        return moment({ hour: hour, minute: min }).format('HH:mm')
+    return null
 }
 
 export default {

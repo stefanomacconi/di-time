@@ -68,7 +68,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             var path = '/movimento/lavorazione/' 
             + rootState.utente.dipendente + "/"
-            + 50 + "/" //fixed limit
+            + 35 + "/" //fixed limit //TODO mettere 50? Abbassare? Alzare?
             if (offset) {
                path = path + offset 
             }

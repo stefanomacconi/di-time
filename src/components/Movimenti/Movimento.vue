@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'movimento', params: { id: movimento.numeroMovimento }}" tag="div">
+  <router-link :to="toMovimento(movimento)" tag="div">
     <v-timeline-item small :color="movimento.colore">
       <v-layout pt-3>
         <v-flex xs4 md2>
@@ -60,6 +60,12 @@ export default {
           this.getTimeFromInteger(movimento.oraFineAttPomeriggio)
       }
     },
+    toMovimento(movimento) {
+      if (!movimento.definitivo)
+        return { name: 'movimento', params: { id: movimento.numeroMovimento }}
+      else
+        return "movimenti"
+    }
   },
   mixins: [utilities]
 }

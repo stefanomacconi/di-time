@@ -62,7 +62,6 @@ export default {
       // new
       this.$store.dispatch('setIsNewMov', true) 
       this.isNewMov = true
-      this.$store.dispatch('clearMov') 
     }
   },
   data() {
@@ -84,6 +83,10 @@ export default {
   methods: {
     goBack() {
       window.history.back()
+      this.asyncClear()
+    },
+    async asyncClear() {
+      this.$store.dispatch('clearMov')
     },
     selectTab(index) {
       this.$store.dispatch('setTab', index)
@@ -106,26 +109,27 @@ export default {
       const oraFineAttPomeriggio = this.$store.getters.getTimeA4 ? this.$store.getters.getTimeA4.replace(":", "") : this.$store.getters.getTimeA4
       axios.post('/movimento/lavorazione/'  + this.$store.getters.getDipendente, 
         {
-            commessa: this.$store.getters.getCommessa,
-            descrizione: this.$store.getters.getNota,
-            // TODO gestire solo il codice della causale, idem per cdl e cdc
-            causale: this.$store.getters.getCausale,
-            cdl: this.$store.getters.getCdl,
-            cdc: this.$store.getters.getCdc,
-            data: date,
-            posizione: this.$store.getters.getPosizione,
-            tempo: this.$store.getters.getTempo,
-            oraInizioMattino: oraInizioMattino,
-            oraFineMattino: oraFineMattino,
-            oraInizioPomeriggio: oraInizioPomeriggio,
-            oraFinePomeriggio: oraFinePomeriggio,
-            oraInizioAttMattino: oraInizioAttMattino,
-            oraFineAttMattino: oraFineAttMattino,
-            oraInizioAttPomeriggio: oraInizioAttPomeriggio,
-            oraFineAttPomeriggio: oraFineAttPomeriggio
+          commessa: this.$store.getters.getCommessa,
+          descrizione: this.$store.getters.getNota,
+          // TODO gestire solo il codice della causale, idem per cdl e cdc
+          causale: this.$store.getters.getCausale,
+          cdl: this.$store.getters.getCdl,
+          cdc: this.$store.getters.getCdc,
+          data: date,
+          posizione: this.$store.getters.getPosizione,
+          tempo: this.$store.getters.getTempo,
+          oraInizioMattino: oraInizioMattino,
+          oraFineMattino: oraFineMattino,
+          oraInizioPomeriggio: oraInizioPomeriggio,
+          oraFinePomeriggio: oraFinePomeriggio,
+          oraInizioAttMattino: oraInizioAttMattino,
+          oraFineAttMattino: oraFineAttMattino,
+          oraInizioAttPomeriggio: oraInizioAttPomeriggio,
+          oraFineAttPomeriggio: oraFineAttPomeriggio
         }).then(res => {
           // eslint-disable-next-line
           console.log(res)
+          //TODO Magari mettere messaggio di success qui
         }).catch(error => {
           // eslint-disable-next-line
           console.log(error)

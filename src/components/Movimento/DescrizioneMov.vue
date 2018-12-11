@@ -1,160 +1,277 @@
 <template>
-  <v-form v-model="valid">
-    <v-container grid-list-md>
-      <v-layout row wrap>
-        <v-flex xs6 md6 lg6>
-        <!-- *** DATA e COMMESSA *** -->
-        <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
-          lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
-          <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
-            prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
-          </v-text-field>
-          <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title @input="menu1 = false">
-          </v-date-picker>
-        </v-menu>
-        </v-flex>
-        <v-flex xs6 md6 lg6>
-          <v-text-field v-model="commessa" :rules="commessaRules" :counter="8" 
-            label="Commessa" append-icon="search" @click:append="showDialogCommessa()" required>
-          </v-text-field>
-        </v-flex>
-        <!-- *** ATTIVITA' *** -->
-        <v-flex xs12>
-          <v-subheader class="subtitle">Attività</v-subheader>
-        </v-flex>  
-        <v-flex xs3 md3 lg3>
-          <v-menu ref="menuTimeA1" :close-on-content-click="false" v-model="menuTimeA1" :nudge-right="40"
-            :return-value.sync="timeA1" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeA1" label="Inizio" prepend-icon="alarm_on" readonly>
+  <div>
+    <v-form v-model="valid">
+      <v-container grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs6 md6 lg6>
+          <!-- *** DATA, COMMESSA e NOTA *** -->
+          <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
+            lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
+            <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
+              prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
             </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA1" v-model="timeA1" 
-              full-width @change="$refs.menuTimeA1.save(timeA1)">
-            </v-time-picker>
+            <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title @input="menu1 = false">
+            </v-date-picker>
           </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-menu ref="menuTimeA2" :close-on-content-click="false" v-model="menuTimeA2" :nudge-right="40"
-            :return-value.sync="timeA2" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeA2" label="Fine" readonly>
+          </v-flex>
+          <v-flex xs6 md6 lg6>
+            <v-text-field v-model="commessa" :rules="commessaRules" :counter="8" 
+              label="Commessa" append-icon="search" @click:append="showDialogCommessa()" required>
             </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA2" v-model="timeA2" 
-              full-width @change="$refs.menuTimeA2.save(timeA2)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs3 md3 lg3>
-          <v-menu ref="menuTimeA3" :close-on-content-click="false" v-model="menuTimeA3" :nudge-right="40"
-            :return-value.sync="timeA3" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeA3" label="Inizio" prepend-icon="work_outline" readonly>
+          </v-flex>
+          <v-flex xs12>
+            <v-textarea rows="3" v-model="nota" prepend-icon="notes" label="Nota" :rules="this.notaRules" required>
+            </v-textarea>
+          </v-flex>
+          <!-- *** ATTIVITA' *** -->
+          <v-flex xs12>
+            <v-subheader class="subtitle">Attività</v-subheader>
+          </v-flex>  
+          <v-flex xs3 md3 lg3>
+            <v-menu ref="menuTimeA1" :close-on-content-click="false" v-model="menuTimeA1" :nudge-right="40"
+              :return-value.sync="timeA1" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeA1" label="Inizio" prepend-icon="alarm_on" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA1" v-model="timeA1" 
+                full-width @change="$refs.menuTimeA1.save(timeA1)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-menu ref="menuTimeA2" :close-on-content-click="false" v-model="menuTimeA2" :nudge-right="40"
+              :return-value.sync="timeA2" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeA2" label="Fine" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA2" v-model="timeA2" 
+                full-width @change="$refs.menuTimeA2.save(timeA2)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs3 md3 lg3>
+            <v-menu ref="menuTimeA3" :close-on-content-click="false" v-model="menuTimeA3" :nudge-right="40"
+              :return-value.sync="timeA3" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeA3" label="Inizio" prepend-icon="work_outline" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA3" v-model="timeA3" 
+                full-width @change="$refs.menuTimeA3.save(timeA3)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-menu ref="menuTimeA4" :close-on-content-click="false" v-model="menuTimeA4" :nudge-right="40"
+              :return-value.sync="timeA4" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeA4" label="Fine" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA4" v-model="timeA4" 
+                full-width @change="$refs.menuTimeA4.save(timeA4)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-text-field :value="totTimeA" :rules="tempoRules" label="Tot" hint="Tempo" persistent-hint single-line readonly required>
             </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA3" v-model="timeA3" 
-              full-width @change="$refs.menuTimeA3.save(timeA3)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-menu ref="menuTimeA4" :close-on-content-click="false" v-model="menuTimeA4" :nudge-right="40"
-            :return-value.sync="timeA4" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeA4" label="Fine" readonly>
-            </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeA4" v-model="timeA4" 
-              full-width @change="$refs.menuTimeA4.save(timeA4)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-text-field :value="totTimeA" :rules="tempoRules" label="Tot" single-line readonly required>
-          </v-text-field>
-        </v-flex>
-        <!-- *** GIORNATA *** -->
-        <v-flex xs12>
-          <v-subheader class="subtitle">Giornata</v-subheader>
-        </v-flex>  
-        <v-flex xs3 md3 lg3>
-          <v-menu ref="menuTimeG1" :close-on-content-click="false" v-model="menuTimeG1" :nudge-right="40"
-            :return-value.sync="timeG1" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeG1" label="Inizio" prepend-icon="wb_sunny" readonly>
-            </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG1" v-model="timeG1" 
-              full-width @change="$refs.menuTimeG1.save(timeG1)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-menu ref="menuTimeG2" :close-on-content-click="false" v-model="menuTimeG2" :nudge-right="40"
-            :return-value.sync="timeG2" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeG2" label="Fine" readonly>
-            </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG2" v-model="timeG2" 
-              full-width @change="$refs.menuTimeG2.save(timeG2)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs3 md3 lg3>
-          <v-menu ref="menuTimeG3" :close-on-content-click="false" v-model="menuTimeG3" :nudge-right="40"
-            :return-value.sync="timeG3" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeG3" label="Inizio" prepend-icon="wb_cloudy" readonly>
-            </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG3" v-model="timeG3" 
-              full-width @change="$refs.menuTimeG3.save(timeG3)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-menu ref="menuTimeG4" :close-on-content-click="false" v-model="menuTimeG4" :nudge-right="40"
-            :return-value.sync="timeG4" lazy transition="scale-transition" offset-y full-width
-            max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="timeG4" label="Fine" readonly>
-            </v-text-field>
-            <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG4" v-model="timeG4" 
-              full-width @change="$refs.menuTimeG4.save(timeG4)">
-            </v-time-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs2 md2 lg2>
-          <v-text-field :value="totTimeG" label="Tot" single-line readonly></v-text-field>
-        </v-flex>
-        <!-- *** DESCRIZIONE *** -->
-        <v-flex xs12>
-          <v-subheader class="subtitle">Descrizione</v-subheader>
-        </v-flex>  
-        <v-flex xs12>
-          <v-textarea rows="3" v-model="nota" prepend-icon="notes" label="Nota" :rules="this.notaRules" required>
-          </v-textarea>
-        </v-flex>
-        <v-flex xs6 md4 lg3>
-          <v-text-field v-model="posizione" :rules="this.posizioneRules" label="Posizione"></v-text-field>
-        </v-flex>
-        <v-flex xs6 md4 lg3>
-           <v-select :items="causali" v-model="causale" label="Causale"></v-select>
-        </v-flex>
-        <v-flex xs6 md4 lg3>
-           <v-select :items="elencoCdl" v-model="cdl" label="CdL"></v-select>
-        </v-flex>
-        <v-flex xs6 md4 lg3>
-           <v-select :items="elencoCdc" v-model="cdc" label="CdC"></v-select>
-        </v-flex>
-      </v-layout>  
-    </v-container>
-  </v-form>
+          </v-flex>
+          <!-- *** GIORNATA *** -->
+          <v-flex xs12>
+            <v-subheader class="subtitle">Giornata</v-subheader>
+          </v-flex>  
+          <v-flex xs3 md3 lg3>
+            <v-menu ref="menuTimeG1" :close-on-content-click="false" v-model="menuTimeG1" :nudge-right="40"
+              :return-value.sync="timeG1" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeG1" label="Inizio" prepend-icon="wb_sunny" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG1" v-model="timeG1" 
+                full-width @change="$refs.menuTimeG1.save(timeG1)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-menu ref="menuTimeG2" :close-on-content-click="false" v-model="menuTimeG2" :nudge-right="40"
+              :return-value.sync="timeG2" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeG2" label="Fine" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG2" v-model="timeG2" 
+                full-width @change="$refs.menuTimeG2.save(timeG2)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs3 md3 lg3>
+            <v-menu ref="menuTimeG3" :close-on-content-click="false" v-model="menuTimeG3" :nudge-right="40"
+              :return-value.sync="timeG3" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeG3" label="Inizio" prepend-icon="wb_cloudy" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG3" v-model="timeG3" 
+                full-width @change="$refs.menuTimeG3.save(timeG3)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-menu ref="menuTimeG4" :close-on-content-click="false" v-model="menuTimeG4" :nudge-right="40"
+              :return-value.sync="timeG4" lazy transition="scale-transition" offset-y full-width
+              max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="timeG4" label="Fine" readonly>
+              </v-text-field>
+              <v-time-picker no-title format="24hr" :allowed-minutes="allowedStep" v-if="menuTimeG4" v-model="timeG4" 
+                full-width @change="$refs.menuTimeG4.save(timeG4)">
+              </v-time-picker>
+            </v-menu>
+          </v-flex>
+          <v-flex xs2 md2 lg2>
+            <v-text-field :value="totTimeG" label="Tot" single-line readonly></v-text-field>
+          </v-flex>
+          <!-- *** DETTAGLIO *** -->
+          <v-flex xs12>
+            <v-subheader class="subtitle">Dettaglio</v-subheader>
+          </v-flex>  
+          <v-flex xs6 md4 lg3>
+            <v-text-field v-model="posizione" :rules="this.posizioneRules" label="Posizione"></v-text-field>
+          </v-flex>
+          <v-flex xs6 md4 lg3>
+            <v-select :items="causali" v-model="causale" label="Causale"></v-select>
+          </v-flex>
+          <v-flex xs6 md4 lg3>
+            <v-select :items="elencoCdl" v-model="cdl" label="CdL"></v-select>
+          </v-flex>
+          <v-flex xs6 md4 lg3>
+            <v-select :items="elencoCdc" v-model="cdc" label="CdC"></v-select>
+          </v-flex>
+        </v-layout>  
+      </v-container>
+    </v-form>
+    <!-- COMMESSA FILTER DIALOG --> 
+      <v-layout row justify-center>
+      <v-dialog v-model="commessaFilterDialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Ricerca Commessa</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="codicePerCommessa" label="Codice" hint="Codice Commessa">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="descrizionePerCommessa" label="Descrizione" hint="Descrizione Commessa">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="RagioneSocialePerCommessa" label="Ragione Sociale" hint="Ragione Sociale del Cliente">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6>
+                  <v-select v-model="statoPerCommessa" :items="['Aperte', 'Bloccate', 'Chiuse']" label="Stato">
+                  </v-select>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" flat @click="commessaFilterDialog = false">Chiudi</v-btn>
+            <v-btn color="primary" flat @click="cercaCommessa">Cerca</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+    <!-- LISTA RICERCA COMMESSE DIALOG -->
+    <v-layout row justify-center>
+    <v-dialog v-model="listaCommesseDialog" scrollable max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Seleziona la Commessa</span>
+        </v-card-title>
+          <div v-if="listaCommesseCercate.length > 29">
+            <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Risultato incompleto</font>
+          </div>
+        <v-divider></v-divider>
+        <v-card-text style="height: 600px;">
+          <v-list two-line>
+            <template v-for="(commessa, index) in listaCommesseCercate">
+              <v-list-tile :key="commessa.codice" avatar ripple @click="sceltaCommessa(commessa.codice)">
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    <b>{{ commessa.codice }}</b>
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title class="text--primary">{{ commessa.ragioneSociale }}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{ commessa.descrizione }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-list-tile-action-text>
+                    &nbsp;&nbsp;
+                    {{ moment(commessa.data).locale('it').format('DD/MM/YYYY').toUpperCase() }}
+                  </v-list-tile-action-text>
+                  <v-icon>
+                    keyboard_return
+                  </v-icon>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="index + 1 < listaCommesseCercate.length" :key="index"></v-divider>
+            </template>
+          </v-list>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-layout>
+    <!-- ATTENDERE DIALOG -->
+    <div class="text-xs-center">
+      <v-dialog v-model="attendereDialog" persistent width="300" >
+        <v-card color="primary" dark>
+          <v-card-text>
+            Attendere...
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+  </div> 
 </template>
 
 <script>
 
 import moment from 'moment'
 
+import axios from 'axios'
+
 import utilities from "../../utilitiesMixin.js"
 
 const campoObbligatorio = "Campo obbligatorio"
 
 export default {
+  mounted() {
+    if (this.$store.getters.isNewMov)
+      return
+    this.attendereDialog = true
+    const path = '/movimento/lavorazione/singolo/' + this.$store.getters.getDipendente + "/"
+      + this.$route.params.id
+    axios.get(path)
+      .then(res => {
+          // eslint-disable-next-line
+          console.log(res)
+          // fix causale description
+          if (res.data && res.data.causale) {
+            const causali = this.$store.getters.getCausali
+            causali.forEach(causale => {
+              if (res.data.causale == causale.codice)
+                res.data.causale = res.data.causale + " - " + causale.descrizione
+            })
+          } 
+          this.$store.commit('setMovimento', res.data)
+          this.attendereDialog = false
+      }).catch(error => {
+          // eslint-disable-next-line
+          console.log(error)
+          this.$store.dispatch('handleError', error.response.data)
+      })
+  },
   data: (vm) => ({
     valid: false,
     commessaRules: [
@@ -170,6 +287,14 @@ export default {
     posizioneRules: [
       v => !isNaN(v) || 'posizione deve contenere numeri'
     ],
+    commessaFilterDialog: false,
+    codicePerCommessa: "",
+    descrizionePerCommessa: "",
+    RagioneSocialePerCommessa: "",
+    statoPerCommessa: "Aperte",
+    attendereDialog: false,
+    listaCommesseCercate: [],
+    listaCommesseDialog: false,
     dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menuDate: false,
     menuTimeG1: false,
@@ -189,6 +314,8 @@ export default {
       return this.calcTotTime(true)
     },
     totTimeA() {
+      // if (!this.$store.getters.getTimeA1 && this.$store.getters.getTempo)
+      //  return this.$store.getters.getTempo
       const value = this.calcTotTime(false)
       this.$store.commit('setTempo', value)
       return value 
@@ -360,9 +487,33 @@ export default {
     allowedDates: val => val >= new Date().toISOString().substr(0, 10),
     allowedStep: m => m % 5 === 0,
     showDialogCommessa() {
-      console.log("prova")
+      this.commessaFilterDialog = true
     },
-     calcTotTime(giornata) {
+    cercaCommessa() {
+      this.commessaFilterDialog = false
+      this.attendereDialog = true
+      axios.get('/commessa/', {params: {
+          codice: this.codicePerCommessa,
+          descrizione: this.descrizionePerCommessa,
+          ragioneSociale: this.RagioneSocialePerCommessa,
+          stato: this.statoPerCommessa
+        }}).then(res => {
+          // eslint-disable-next-line
+          console.log(res)
+          this.attendereDialog = false
+          this.listaCommesseCercate = res.data
+          this.listaCommesseDialog = true
+        }).catch(error => {
+          // eslint-disable-next-line
+          console.log(error)
+          this.$store.dispatch('handleError', error.response.data)
+        })
+    },
+    sceltaCommessa(codice) {
+      this.$store.commit('setCommessa', codice)
+      this.listaCommesseDialog = false
+    },
+    calcTotTime(giornata) {
       var times
       if (giornata) {
         times = [

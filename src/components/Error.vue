@@ -18,6 +18,7 @@
         </v-expansion-panel>
         <br>
         <v-btn color="primary" @click="goBack()">Indietro</v-btn>
+        <v-btn color="secondary" @click="goHome()">Home</v-btn>
     </div>
 </template>
 
@@ -49,6 +50,9 @@ export default {
     methods: {
         goBack() {
             window.history.back();
+        },
+        goHome() {
+            this.$router.push('/movimenti')
         }
     }
 }

@@ -103,8 +103,12 @@ export default {
     getDayColor(movimento, index) {
       const totaleOreGiorno = moment.duration(this.getTotalHourDay(movimento)).asMilliseconds()
       const totaleOreMovs = moment.duration(this.getTotalHourMovs(movimento.data, index)).asMilliseconds()
-      if (totaleOreGiorno == totaleOreMovs)
-        return "primary"
+      if (totaleOreGiorno == totaleOreMovs) {
+        if (!movimento.definitivo)
+          return "primary"
+        else
+          return "secondary"
+      }
       if (totaleOreGiorno > totaleOreMovs)
         return "warning"
       if (totaleOreGiorno < totaleOreMovs)

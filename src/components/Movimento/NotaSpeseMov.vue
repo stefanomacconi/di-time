@@ -2,9 +2,9 @@
   <v-form v-model="valid">
     <v-container grid-list-md>
       <v-layout row wrap>
-        <v-flex xs12>
+        <!-- <v-flex xs12>
           <v-subheader class="subtitle">Nota Spese</v-subheader>
-        </v-flex>
+        </v-flex> -->
         <v-flex v-for="nota in notaSpese" :key="nota.codice" xs12 md6 lg6>
           <v-text-field :rules="notaSpeseRules" :value="getNotaValue(nota.codice)" 
             @input="updateNotaSpese($event, nota)" :label="nota.descrizione">
@@ -37,6 +37,10 @@ export default {
     getNotaValue() {
       return codice => {
         const nota = this.$store.getters.getNotaInNotaSpese(codice)
+        // capire perché torna un array
+        if (nota[0]) {
+          return nota[0].value
+        }
         return nota.value
       }
     },

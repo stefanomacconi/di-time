@@ -67,6 +67,7 @@ const actions = {
         })
     },
     logout({ commit }) {
+        // TODO EFFETTUARE ANCHE IL LOGOUT CON I SERVIZI REST DITECH
         commit('clearAuthData')
         commit('clearMov')
         commit('clearMovimentiData')
