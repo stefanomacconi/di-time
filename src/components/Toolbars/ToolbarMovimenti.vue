@@ -8,7 +8,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-btn icon>
+        <v-btn icon @click="dateMenu = true">
           <v-icon>event</v-icon>
         </v-btn>
         <v-divider dark vertical></v-divider>
@@ -23,6 +23,17 @@
           {{ menuLogout.title }}
         </v-btn>
       </v-toolbar-items>
+      <!-- Date Menu -->
+      <v-menu ref="dateMenu" :close-on-content-click="false" v-model="dateMenu" :nudge-right="40"
+        :return-value.sync="date" lazy transition="scale-transition" offset-y full-width
+        max-width="290px" min-width="290px">
+        <v-date-picker :event-color="date => date[9] % 2 ? 'red' : 'yellow'" v-model="date" 
+          :events="functionEvents" no-title show-current locale="it-IT">
+          <v-spacer></v-spacer>
+          <v-btn flat color="secondary" @click="dateMenu = false">Chiudi</v-btn>
+          <v-btn flat color="primary" @click="dateMenu = false">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
       <!-- <v-menu right bottom origin="bottom right" transition="v-scale-transition">
         <v-btn dark icon slot="activator">
           <v-icon>more_vert</v-icon>
@@ -76,6 +87,8 @@
 <script>
 export default {
   data: () => ({
+    date: new Date().toISOString().substr(0, 10),
+    dateMenu: false,
     drawer: false,
     menus: [
       {title: "Nuovo Movimento", to: "/movimento", icon: "note_add"}
@@ -93,6 +106,10 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logout')
+    },
+    functionEvents (date) {
+      const [,, day] = date.split('-')
+      return parseInt(day, 10) % 3 === 0
     }
   }
 }

@@ -10,7 +10,7 @@
             <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
               prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
             </v-text-field>
-            <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title @input="menu1 = false">
+            <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title locale="it-IT">
             </v-date-picker>
           </v-menu>
           </v-flex>
@@ -191,6 +191,9 @@
         </v-card-title>
           <div v-if="listaCommesseCercate.length > 29">
             <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Risultato incompleto</font>
+          </div>
+          <div v-if="listaCommesseCercate.length == 0">
+            <font color="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nessuna commessa trovata</font>
           </div>
         <v-divider></v-divider>
         <v-card-text style="height: 600px;">

@@ -12,7 +12,7 @@
       <v-spacer></v-spacer>
         <!-- TODO passarli con props -->
         <v-toolbar-items v-if="this.isNewMov">
-          <v-btn icon color="green lighten-2" @click="saveMov">
+          <v-btn icon color="green lighten-2" @click="saveMov(id)">
             <v-icon>check</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -91,14 +91,14 @@ export default {
     selectTab(index) {
       this.$store.dispatch('setTab', index)
     },
-    saveMov() {
+    saveMov(numeroMovimento) {
       // check obligatory fields
       if (!this.$store.getters.getCommessa || !this.$store.getters.getTempo) {
         // TODO mettere qui un qualcosa che faccia comparire rossi i campi non immessi
         return
       }
       // save movement
-      const date = moment(this.$store.getters.getData, "YYYY-MM-DD").valueOf()
+      const data = moment(this.$store.getters.getData, "YYYY-MM-DD").valueOf()
       const oraInizioMattino = this.$store.getters.getTimeG1 ? this.$store.getters.getTimeG1.replace(":", "") : this.$store.getters.getTimeG1
       const oraFineMattino = this.$store.getters.getTimeG2 ? this.$store.getters.getTimeG2.replace(":", "") : this.$store.getters.getTimeG2
       const oraInizioPomeriggio = this.$store.getters.getTimeG3 ? this.$store.getters.getTimeG3.replace(":", "") : this.$store.getters.getTimeG3
@@ -107,25 +107,32 @@ export default {
       const oraFineAttMattino = this.$store.getters.getTimeA2 ? this.$store.getters.getTimeA2.replace(":", "") : this.$store.getters.getTimeA2
       const oraInizioAttPomeriggio = this.$store.getters.getTimeA3 ? this.$store.getters.getTimeA3.replace(":", "") : this.$store.getters.getTimeA3
       const oraFineAttPomeriggio = this.$store.getters.getTimeA4 ? this.$store.getters.getTimeA4.replace(":", "") : this.$store.getters.getTimeA4
+      const cau = this.$store.getters.getCausale
+      const causale = cau ? (cau.substr(0, cau.indexOf('-'))).trim() : cau
+      const cl = this.$store.getters.getCdl
+      const cdl = cl ? (cl.substr(0, cl.indexOf('-'))).trim() : cl
+      const cc = this.$store.getters.getCdc
+      const cdc = cc ? (cc.substr(0, cc.indexOf('-'))).trim() : cc
       axios.post('/movimento/lavorazione/'  + this.$store.getters.getDipendente, 
         {
+          numeroMovimento,
           commessa: this.$store.getters.getCommessa,
           descrizione: this.$store.getters.getNota,
-          // TODO gestire solo il codice della causale, idem per cdl e cdc
-          causale: this.$store.getters.getCausale,
-          cdl: this.$store.getters.getCdl,
-          cdc: this.$store.getters.getCdc,
-          data: date,
+          causale,
+          cdl,
+          cdc,
+          data,
           posizione: this.$store.getters.getPosizione,
           tempo: this.$store.getters.getTempo,
-          oraInizioMattino: oraInizioMattino,
-          oraFineMattino: oraFineMattino,
-          oraInizioPomeriggio: oraInizioPomeriggio,
-          oraFinePomeriggio: oraFinePomeriggio,
-          oraInizioAttMattino: oraInizioAttMattino,
-          oraFineAttMattino: oraFineAttMattino,
-          oraInizioAttPomeriggio: oraInizioAttPomeriggio,
-          oraFineAttPomeriggio: oraFineAttPomeriggio
+          oraInizioMattino,
+          oraFineMattino,
+          oraInizioPomeriggio,
+          oraFinePomeriggio,
+          oraInizioAttMattino,
+          oraFineAttMattino,
+          oraInizioAttPomeriggio,
+          oraFineAttPomeriggio,
+          notaSpese: this.$store.getters.getNotaSpese
         }).then(res => {
           // eslint-disable-next-line
           console.log(res)
