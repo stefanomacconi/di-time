@@ -74,7 +74,9 @@ const mutations = {
             state.movimento.cdl = movimento.cdl  + " - " + movimento.descrizioneCdl
         if (movimento.cdc && movimento.cdc != 0)
             state.movimento.cdc = movimento.cdc + " - " + movimento.descrizioneCdc
-        state.movimento.data = new Date(movimento.data).toISOString().substr(0, 10) 
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        const dataConvertita = (new Date(movimento.data - tzoffset)).toISOString().substr(0, 10)
+        state.movimento.data = dataConvertita
         state.movimento.commessa = movimento.commessa 
         state.movimento.tempo = movimento.tempo
         state.movimento.notaSpese = movimento.notaSpese
@@ -272,7 +274,8 @@ const getters = {
     },
 }
 
-import moment from "moment"
+import moment from 'moment'
+
 // TODO gestire meglio questa utility
 // con un'unica export default != ai mixin
 const getTimeFromInteger = function (time) {

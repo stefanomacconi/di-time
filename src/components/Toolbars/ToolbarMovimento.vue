@@ -24,11 +24,11 @@
             <v-icon>attach_file</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
-          <v-btn icon @click="saveMov">
+          <v-btn icon @click="saveMov(id)">
             <v-icon color="green lighten-2">check_circle</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
-          <v-btn icon>
+          <v-btn icon @click="dialogConfirm = true">
             <v-icon color="red lighten-2">delete_forever</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -39,6 +39,30 @@
           </v-tab>
         </v-tabs>
     </v-toolbar>
+    <v-layout row justify-center>
+      <v-dialog v-model="dialogConfirm" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">Confermi l'eliminazione?</v-card-title>
+          <v-card-text>Le informazioni del movimento {{ id }} verranno cancellate definitivamente</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="secondary" flat @click="dialogConfirm = false">Indietro</v-btn>
+            <v-btn class="error" flat @click="deleteMov(id)">Elimina</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+    <!-- ATTENDERE DIALOG -->
+    <div class="text-xs-center">
+      <v-dialog v-model="attendereDialog" persistent width="300" >
+        <v-card color="primary" dark>
+          <v-card-text>
+            Attendere...
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
@@ -72,7 +96,9 @@ export default {
         {index: 1, icon: "receipt", descr: "Nota Spese"},
         {index: 2, icon: "shopping_cart", descr: "Lista Articoli"}
       ],
-      isNewMov : false
+      isNewMov : false,
+      dialogConfirm : false,
+      attendereDialog : false
     }
   },
   props: {
@@ -97,6 +123,7 @@ export default {
         // TODO mettere qui un qualcosa che faccia comparire rossi i campi non immessi
         return
       }
+      this.attendereDialog = true
       // save movement
       const data = moment(this.$store.getters.getData, "YYYY-MM-DD").valueOf()
       const oraInizioMattino = this.$store.getters.getTimeG1 ? this.$store.getters.getTimeG1.replace(":", "") : this.$store.getters.getTimeG1
@@ -136,12 +163,42 @@ export default {
         }).then(res => {
           // eslint-disable-next-line
           console.log(res)
-          //TODO Magari mettere messaggio di success qui
+          // Update lista mov
+          this.$store.dispatch('fetchMovimenti').then(() => {
+            // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
+            history.replaceState({}, "movimenti", "movimenti")
+            const numMov = res.data.numeroMovimento
+            this.attendereDialog = false
+            this.$router.push({ name: 'movimento', params: { id: numMov }})
+          })
+          // TODO Magari mettere messaggio di success
         }).catch(error => {
+          this.attendereDialog = false
           // eslint-disable-next-line
           console.log(error)
           this.$store.dispatch('handleError', error.response.data)
         })
+    },
+    deleteMov(numeroMovimento) {
+      this.dialogConfirm = false
+      this.attendereDialog = true
+      axios.delete(
+        '/movimento/lavorazione/'  + numeroMovimento
+      ).then(res => {
+        // eslint-disable-next-line
+        console.log(res)
+        // Update lista mov
+        this.$store.dispatch('fetchMovimenti').then(() => {
+          this.attendereDialog = false
+          this.$router.push({ name: 'movimenti'})
+          this.asyncClear()
+        })
+      }).catch(error => {
+        this.attendereDialog = false
+        // eslint-disable-next-line
+        console.log(error)
+        this.$store.dispatch('handleError', error.response.data)
+      })
     }
   }
 }

@@ -4,19 +4,21 @@
       <v-container grid-list-md>
         <v-layout row wrap>
           <v-flex xs6 md6 lg6>
-          <!-- *** DATA, COMMESSA e NOTA *** -->
-          <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
-            lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
-            <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
-              prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
-            </v-text-field>
-            <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title locale="it-IT">
-            </v-date-picker>
-          </v-menu>
+            <!-- *** DATA, COMMESSA e NOTA *** -->
+            <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
+              lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
+              <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
+                prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
+              </v-text-field>
+              <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title locale="it-IT"
+                :readonly="this.$store.getters.isNewMov ? false : true">
+              </v-date-picker>
+            </v-menu>
           </v-flex>
           <v-flex xs6 md6 lg6>
             <v-text-field v-model="commessa" :rules="commessaRules" :counter="8" 
-              label="Commessa" append-icon="search" @click:append="showDialogCommessa()" required>
+              label="Commessa" append-icon="search" @click:append="showDialogCommessa()" required 
+              :readonly="this.$store.getters.isNewMov ? false : true">
             </v-text-field>
           </v-flex>
           <v-flex xs12>
@@ -131,16 +133,20 @@
             <v-subheader class="subtitle">Dettaglio</v-subheader>
           </v-flex>  
           <v-flex xs6 md4 lg3>
-            <v-text-field v-model="posizione" :rules="this.posizioneRules" label="Posizione"></v-text-field>
+            <v-text-field v-model="posizione" :rules="this.posizioneRules" label="Posizione"
+              :readonly="this.$store.getters.isNewMov ? false : true"></v-text-field>
           </v-flex>
           <v-flex xs6 md4 lg3>
-            <v-select :items="causali" v-model="causale" label="Causale"></v-select>
+            <v-select :items="causali" v-model="causale" label="Causale" 
+              :readonly="this.$store.getters.isNewMov ? false : true"></v-select>
           </v-flex>
           <v-flex xs6 md4 lg3>
-            <v-select :items="elencoCdl" v-model="cdl" label="CdL"></v-select>
+            <v-select :items="elencoCdl" v-model="cdl" label="CdL" 
+              :readonly="this.$store.getters.isNewMov ? false : true"></v-select>
           </v-flex>
           <v-flex xs6 md4 lg3>
-            <v-select :items="elencoCdc" v-model="cdc" label="CdC"></v-select>
+            <v-select :items="elencoCdc" v-model="cdc" label="CdC"
+              :readonly="this.$store.getters.isNewMov ? false : true"></v-select>
           </v-flex>
         </v-layout>  
       </v-container>
@@ -490,6 +496,8 @@ export default {
     allowedDates: val => val >= new Date().toISOString().substr(0, 10),
     allowedStep: m => m % 5 === 0,
     showDialogCommessa() {
+      if (!this.$store.getters.isNewMov)
+        return
       this.commessaFilterDialog = true
     },
     cercaCommessa() {
