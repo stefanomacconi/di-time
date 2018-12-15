@@ -5,16 +5,24 @@ const state = {
     causali: [],
     elencoCdl: [],
     elencoCdc: [],
-    definizioniNotaSpese: []
+    definizioniNotaSpese: [],
+    giorniWarning: [],
+    giorniError: []
 }
 
 const mutations = {
     clearMovimentiData(state) {
         state.movimenti = [],
+        state.giorniError = [],
+        state.giorniWarning = [],
         state.elencoCdc = [],
         state.elencoCdl = [],
         state.causali = [],
         state.definizioniNotaSpese = []
+    },
+    clearGiorniColor(state) {
+        state.giorniError = [],
+        state.giorniWarning = []
     },
     setMovimenti(state, movimenti) {
         state.movimenti = movimenti
@@ -60,6 +68,14 @@ const mutations = {
             }
             state.definizioniNotaSpese.push(data)
         })
+    },
+    addToGiorniWarning(state, data) {
+        if (state.giorniWarning.indexOf(data) === -1) 
+            state.giorniWarning.push(data)
+    },
+    addToGiorniError(state, data) {
+        if (state.giorniError.indexOf(data) === -1) 
+            state.giorniError.push(data)
     }
 }
 
@@ -68,7 +84,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             var path = '/movimento/lavorazione/' 
             + rootState.utente.dipendente + "/"
-            + 30 + "/" //fixed limit //TODO mettere 50? Abbassare? Alzare?
+            + 35 + "/" //fixed limit //TODO mettere 50? Abbassare? Alzare?
             if (offset) {
                path = path + offset 
             }
@@ -140,6 +156,15 @@ const actions = {
         })
 
     },
+    clearGiorniColor({commit}) {
+        commit('clearGiorniColor')
+    },
+    addToGiorniWarning({commit}, data) {
+        commit('addToGiorniWarning', data)
+    },
+    addToGiorniError({commit}, data) {
+        commit('addToGiorniError', data)
+    }
 }
 
 const getters = {
@@ -158,6 +183,12 @@ const getters = {
     getDefinizioniNotaSpese(state) {
         return state.definizioniNotaSpese
     },
+    getGiorniWarning(state) {
+        return state.giorniWarning
+    },
+    getGiorniError(state) {
+        return state.giorniError
+    }
 }
 
 export default {

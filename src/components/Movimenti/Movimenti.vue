@@ -101,6 +101,7 @@ export default {
       }
     },
     getDayColor(movimento, index) {
+      console.log("qui dentro")
       const totaleOreGiorno = moment.duration(this.getTotalHourDay(movimento)).asMilliseconds()
       const totaleOreMovs = moment.duration(this.getTotalHourMovs(movimento.data, index)).asMilliseconds()
       if (totaleOreGiorno == totaleOreMovs) {
@@ -109,10 +110,20 @@ export default {
         else
           return "secondary"
       }
-      if (totaleOreGiorno > totaleOreMovs)
+      if (totaleOreGiorno > totaleOreMovs) {
+        this.addToGiorniWarning(movimento.data)
         return "warning"
-      if (totaleOreGiorno < totaleOreMovs)
+      }
+      if (totaleOreGiorno < totaleOreMovs) {
+        this.addToGiorniError(movimento.data)
         return "error"
+      }
+    },
+    addToGiorniWarning(data) {
+      this.$store.dispatch("addToGiorniWarning", data)
+    },
+    addToGiorniError(data) {
+      this.$store.dispatch("addToGiorniError", data)
     },
     getTotalHourDay(movimento) {
       var t1 = moment(this.getTimeFromInteger(movimento.oraInizioMattino), "HH:mm")
