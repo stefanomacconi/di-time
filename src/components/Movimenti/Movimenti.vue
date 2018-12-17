@@ -101,7 +101,6 @@ export default {
       }
     },
     getDayColor(movimento, index) {
-      console.log("qui dentro")
       const totaleOreGiorno = moment.duration(this.getTotalHourDay(movimento)).asMilliseconds()
       const totaleOreMovs = moment.duration(this.getTotalHourMovs(movimento.data, index)).asMilliseconds()
       if (totaleOreGiorno == totaleOreMovs) {

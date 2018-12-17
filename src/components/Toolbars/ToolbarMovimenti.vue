@@ -78,8 +78,8 @@
       <v-menu ref="dateMenu" :close-on-content-click="false" v-model="dateMenu" :nudge-right="40"
         :return-value.sync="date" lazy transition="scale-transition" offset-y full-width
         max-width="290px" min-width="290px">
-        <v-date-picker :event-color="date => date[9] % 2 ? 'red' : 'yellow'" v-model="date" 
-          :events="functionEvents" :allowed-dates="allowedDates" no-title show-current locale="it-IT">
+        <v-date-picker :event-color="functionEventsColor" :events="functionEvents" v-model="date" 
+          :allowed-dates="allowedDates" no-title show-current locale="it-IT">
           <v-spacer></v-spacer>
           <v-btn flat color="secondary" @click="dateMenu = false">Chiudi</v-btn>
           <v-btn flat color="primary" @click="dateMenu = false">OK</v-btn>
@@ -89,6 +89,9 @@
 </template>
 
 <script>
+
+import moment from 'moment'
+
 export default {
   data: () => ({
     date: new Date().toISOString().substr(0, 10),
@@ -111,9 +114,21 @@ export default {
     logout() {
       this.$store.dispatch('logout')
     },
-    functionEvents (date) {
-      const [,, day] = date.split('-')
-      return parseInt(day, 10) % 3 === 0
+    functionEvents(date) {
+      const warningDate = this.$store.getters.getGiorniWarning
+      const errorDate = this.$store.getters.getGiorniError
+      const ms = moment(date).valueOf()
+      if (warningDate.includes(ms) || errorDate.includes(ms))
+        return ms
+    },
+    functionEventsColor(date) {
+      const warningDate = this.$store.getters.getGiorniWarning
+      const errorDate = this.$store.getters.getGiorniError
+      const ms = moment(date).valueOf()
+      if (warningDate.includes(ms))
+        return "yellow" 
+      if (errorDate.includes(ms))
+        return "red"
     },
     allowedDates: val => val <= new Date().toISOString().substr(0, 10),
   }
