@@ -1,6 +1,7 @@
 <template>
-  <router-link :to="toMovimento(movimento)" tag="div">
-    <v-timeline-item small :color="movimento.colore">
+<div @click="selected(movimento.numeroMovimento)">
+  <v-timeline-item small :color="getMovColor(movimento)">
+    <router-link :to="toMovimento(movimento)" tag="div">
       <v-layout pt-3>
         <v-flex xs4 md2>
           <div v-if="movimento.oraInizioAttMattino">
@@ -31,8 +32,10 @@
           </div>
         </v-flex>
       </v-layout>
-    </v-timeline-item>
-  </router-link>
+    </router-link>
+  </v-timeline-item>
+  <v-divider v-if="!ultimo" inset></v-divider>
+</div>
 </template>
 
 <script>
@@ -40,12 +43,26 @@
 import utilities from "../../utilitiesMixin.js"
 
 export default {
-    props: {
+  props: {
     movimento: {
-        type: Object
+      type: Object
+    },
+    ultimo: {
+      type: Boolean
     }
   },
+  beforeDestroy() {
+    this.$store.dispatch("clearMovimentiSelezionati")
+  },
   methods: {
+    selected(numeroMovimento){
+      var movimenti = this.$store.getters.getMovimentiSelezionati
+      var index = movimenti.indexOf(numeroMovimento)
+      if (index === -1) 
+        this.$store.dispatch("addToMovimentiSelezionati", numeroMovimento)
+      else 
+        this.$store.dispatch("removeToMovimentiSelezionati", index)
+    },
     getOrariMovimentoMattina(movimento) {
       var orariMovimentoMattina = this.getTimeFromInteger(movimento.oraInizioAttMattino)
       if (orariMovimentoMattina) {
@@ -65,7 +82,15 @@ export default {
         return { name: 'movimento', params: { id: movimento.numeroMovimento }}
       else
         return "movimenti"
-    }
+    },
+    getMovColor(movimento) {
+      var movimenti = this.$store.getters.getMovimentiSelezionati
+      if (movimenti.indexOf(movimento.numeroMovimento) != -1)
+        return "transparent"
+      if (movimento.definitivo)
+        return "secondary"
+      return movimento.colore
+    },
   },
   mixins: [utilities]
 }

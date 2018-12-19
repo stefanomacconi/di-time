@@ -493,7 +493,7 @@ export default {
       const [month, day, year] = date.split('/')
       return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`
     },
-    allowedDates: val => val >= new Date().toISOString().substr(0, 10),
+    allowedDates: val => val <= new Date().toISOString().substr(0, 10),
     allowedStep: m => m % 5 === 0,
     showDialogCommessa() {
       if (!this.$store.getters.isNewMov)

@@ -1,36 +1,49 @@
 import axios from 'axios'
 
 const state = {
-    movimenti: [],
+    date: [],
+    offset: 0,
     causali: [],
     elencoCdl: [],
     elencoCdc: [],
     definizioniNotaSpese: [],
     giorniWarning: [],
-    giorniError: []
+    giorniError: [],
+    pickedData: new Date().getTime(),
+    movimentiSelezionati: []
 }
 
 const mutations = {
     clearMovimentiData(state) {
-        state.movimenti = [],
+        state.date = [],
+        state.offset = 0,
         state.giorniError = [],
         state.giorniWarning = [],
         state.elencoCdc = [],
         state.elencoCdl = [],
         state.causali = [],
-        state.definizioniNotaSpese = []
+        state.definizioniNotaSpese = [],
+        state.pickedData = new Date().getTime(),
+        state.movimentiSelezionati = []
     },
     clearGiorniColor(state) {
         state.giorniError = [],
         state.giorniWarning = []
     },
-    setMovimenti(state, movimenti) {
-        state.movimenti = movimenti
+    setDate(state, date) {
+        state.date = date
     },
-    addMovimenti(state, movimenti) {
-        movimenti.forEach(movimento => {
-            state.movimenti.push(movimento)
-        });
+    addDate(state, date) {
+        const last = state.date[state.date.length-1]
+        if (date.length > 0) {
+            const first = date[0]
+            if (last.data == first.data) {
+                state.date[state.date.length-1].movimenti.concat(date[0].movimenti)
+            }
+        }
+        for (let index = 1; index < date.length; index++) {
+            state.date.push(date[index])
+        }
     },
     setCausali(state, causali) {
         causali.forEach(causale => {
@@ -76,6 +89,22 @@ const mutations = {
     addToGiorniError(state, data) {
         if (state.giorniError.indexOf(data) === -1) 
             state.giorniError.push(data)
+    },
+    setPickedData(state, data) {
+        state.pickedData = data
+    },
+    setOffset(state, offset) {
+        state.offset = offset
+    },
+    addToMovimentiSelezionati(state, movimento) {
+        state.movimentiSelezionati.push(movimento)
+    },
+    removeToMovimentiSelezionati(state, index) {
+        if (index > -1)
+            state.movimentiSelezionati.splice(index, 1)
+    },
+    clearMovimentiSelezionati(state) {
+        state.movimentiSelezionati = []
     }
 }
 
@@ -84,7 +113,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             var path = '/movimento/lavorazione/' 
             + rootState.utente.dipendente + "/"
-            + 35 + "/" //fixed limit //TODO mettere 50? Abbassare? Alzare?
+            + 50 + "/" //fixed limit //TODO Abbassare? Alzare?
             if (offset) {
                path = path + offset 
             }
@@ -93,9 +122,9 @@ const actions = {
                 // eslint-disable-next-line
                 console.log(res)
                 if (offset) {
-                    commit('addMovimenti', res.data)
+                    commit('addDate', res.data)
                 } else {
-                    commit('setMovimenti', res.data)
+                    commit('setDate', res.data)
                 }
                 resolve(res)
             }).catch(error => {
@@ -164,12 +193,34 @@ const actions = {
     },
     addToGiorniError({commit}, data) {
         commit('addToGiorniError', data)
+    },
+    setPickedData({commit}, data) {
+        commit('setPickedData', data)
+    },
+    setOffset({commit}, offset) {
+        commit('setOffset', offset)
+    },
+    incrementOffset({dispatch, state}) {
+      var offset = state.offset + 50
+      dispatch('setOffset', offset)
+    },
+    addToMovimentiSelezionati({commit}, movimento) {
+        commit('addToMovimentiSelezionati', movimento)
+    },
+    removeToMovimentiSelezionati({commit}, movimento) {
+        commit('removeToMovimentiSelezionati', movimento)
+    },
+    clearMovimentiSelezionati({commit}) {
+        commit('clearMovimentiSelezionati')
     }
 }
 
 const getters = {
     getMovimenti(state) {
-        return state.movimenti
+        return state.date.movimenti
+    },
+    getDate(state) {
+        return state.date
     },
     getCausali(state) {
         return state.causali
@@ -188,6 +239,15 @@ const getters = {
     },
     getGiorniError(state) {
         return state.giorniError
+    },
+    getPickedData(state) {
+        return state.pickedData
+    },
+    getOffset(state) {
+        return state.offset
+    },
+    getMovimentiSelezionati(state) {
+        return state.movimentiSelezionati
     }
 }
 

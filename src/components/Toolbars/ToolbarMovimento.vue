@@ -140,25 +140,28 @@ export default {
       const cdl = cl ? (cl.substr(0, cl.indexOf('-'))).trim() : cl
       const cc = this.$store.getters.getCdc
       const cdc = cc ? (cc.substr(0, cc.indexOf('-'))).trim() : cc
+      const orari = {
+        oraInizioMattino,
+        oraFineMattino,
+        oraInizioPomeriggio,
+        oraFinePomeriggio,
+        oraInizioAttMattino,
+        oraFineAttMattino,
+        oraInizioAttPomeriggio,
+        oraFineAttPomeriggio
+      }
       axios.post('/movimento/lavorazione/'  + this.$store.getters.getDipendente, 
         {
           numeroMovimento,
           commessa: this.$store.getters.getCommessa,
-          descrizione: this.$store.getters.getNota,
+          nota: this.$store.getters.getNota,
           causale,
           cdl,
           cdc,
           data,
           posizione: this.$store.getters.getPosizione,
           tempo: this.$store.getters.getTempo,
-          oraInizioMattino,
-          oraFineMattino,
-          oraInizioPomeriggio,
-          oraFinePomeriggio,
-          oraInizioAttMattino,
-          oraFineAttMattino,
-          oraInizioAttPomeriggio,
-          oraFineAttPomeriggio,
+          orari,
           notaSpese: this.$store.getters.getNotaSpese
         }).then(res => {
           // eslint-disable-next-line
