@@ -112,7 +112,11 @@ export default {
       this.asyncClear()
     },
     async asyncClear() {
+      await this.sleep(500);
       this.$store.dispatch('clearMov')
+    },
+    sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
     },
     selectTab(index) {
       this.$store.dispatch('setTab', index)
@@ -167,6 +171,7 @@ export default {
           // eslint-disable-next-line
           console.log(res)
           // Update lista mov
+          /*
           this.$store.dispatch('fetchMovimenti').then(() => {
             // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
             history.replaceState({}, "movimenti", "movimenti")
@@ -174,6 +179,21 @@ export default {
             this.attendereDialog = false
             this.$router.push({ name: 'movimento', params: { id: numMov }})
           })
+          */
+          const newDatabean = res.data
+          const stringDate = moment(newDatabean.data).format('YYYY-MM-DD')
+          var dataBean = this.$store.getters.getDate[stringDate]
+          if (dataBean)
+            this.$store.getters.getDate[stringDate] = newDatabean
+          else   
+            this.$store.getters.getDate.push(newDatabean)
+          // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
+          history.replaceState({}, "movimenti", "movimenti")
+          if (!numeroMovimento)
+            // se è un'aggiunta prendo l'ultimo numero movimento
+            numeroMovimento = newDatabean.movimenti[newDatabean.movimenti.length - 1].numeroMovimento
+          this.attendereDialog = false
+          this.$router.push({ name: 'movimento', params: { id: numeroMovimento }})
           // TODO Magari mettere messaggio di success
         }).catch(error => {
           this.attendereDialog = false
@@ -191,6 +211,7 @@ export default {
         // eslint-disable-next-line
         console.log(res)
         // Update lista mov
+        // TODO non conviene ritornare tutto ma usare la GET sul metodo che ritorna solo la data
         this.$store.dispatch('fetchMovimenti').then(() => {
           this.attendereDialog = false
           this.$router.push({ name: 'movimenti'})

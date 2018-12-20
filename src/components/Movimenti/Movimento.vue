@@ -1,14 +1,14 @@
 <template>
-<div @click="selected(movimento.numeroMovimento)">
+<div @click="selected(movimento)">
   <v-timeline-item small :color="getMovColor(movimento)">
     <router-link :to="toMovimento(movimento)" tag="div">
       <v-layout pt-3>
         <v-flex xs4 md2>
-          <div v-if="movimento.oraInizioAttMattino">
+          <div v-if="movimento.orari.oraInizioAttMattino">
             <strong>{{ getOrariMovimentoMattina(movimento) }}</strong>
             <br>
           </div>
-          <div v-if="movimento.oraInizioAttPomeriggio">
+          <div v-if="movimento.orari.oraInizioAttPomeriggio">
             <strong>{{ getOrariMovimentoPomeriggio(movimento) }}</strong>
             <br>
           </div>
@@ -17,18 +17,18 @@
           </div>
         </v-flex>
         <v-flex xs8 md10> <!--offset-xs1 -->
-          <strong>{{ movimento.commessa }}</strong>
+          <strong>&nbsp;{{ movimento.commessa }}</strong>
           <div class="caption hidden-sm-and-up">
             {{ movimento.descrizioneCommessa | truncate }}
           </div>
           <div class="hidden-sm-and-up">
-            {{ movimento.descrizione | truncate }}
+            {{ movimento.nota | truncate }}
           </div>
           <div class="caption hidden-xs-only">
             {{ movimento.descrizioneCommessa }}
           </div>
           <div class="hidden-xs-only">
-            {{ movimento.descrizione }}
+            {{ movimento.nota }}
           </div>
         </v-flex>
       </v-layout>
@@ -55,7 +55,10 @@ export default {
     this.$store.dispatch("clearMovimentiSelezionati")
   },
   methods: {
-    selected(numeroMovimento){
+    selected(movimento){
+      if (movimento.definitivo)
+        return
+      const numeroMovimento = movimento.numeroMovimento
       var movimenti = this.$store.getters.getMovimentiSelezionati
       var index = movimenti.indexOf(numeroMovimento)
       if (index === -1) 
@@ -64,17 +67,17 @@ export default {
         this.$store.dispatch("removeToMovimentiSelezionati", index)
     },
     getOrariMovimentoMattina(movimento) {
-      var orariMovimentoMattina = this.getTimeFromInteger(movimento.oraInizioAttMattino)
+      var orariMovimentoMattina = this.getTimeFromInteger(movimento.orari.oraInizioAttMattino)
       if (orariMovimentoMattina) {
         return orariMovimentoMattina + " - " +
-          this.getTimeFromInteger(movimento.oraFineAttMattino)
+          this.getTimeFromInteger(movimento.orari.oraFineAttMattino)
       }
     },
     getOrariMovimentoPomeriggio(movimento) {
-      var orariMovimentoPomeriggio = this.getTimeFromInteger(movimento.oraInizioAttPomeriggio)
+      var orariMovimentoPomeriggio = this.getTimeFromInteger(movimento.orari.oraInizioAttPomeriggio)
       if (orariMovimentoPomeriggio) {
         return orariMovimentoPomeriggio + " - " +
-          this.getTimeFromInteger(movimento.oraFineAttPomeriggio)
+          this.getTimeFromInteger(movimento.orari.oraFineAttPomeriggio)
       }
     },
     toMovimento(movimento) {
@@ -86,10 +89,17 @@ export default {
     getMovColor(movimento) {
       var movimenti = this.$store.getters.getMovimentiSelezionati
       if (movimenti.indexOf(movimento.numeroMovimento) != -1)
-        return "transparent"
+        // selected
+        return "white"
       if (movimento.definitivo)
+        // definitive
         return "secondary"
-      return movimento.colore
+      // TODO
+      if (movimento.colore)
+        // TODO
+        return movimento.colore
+      // default
+      return "light-blue"
     },
   },
   mixins: [utilities]

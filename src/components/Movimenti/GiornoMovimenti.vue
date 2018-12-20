@@ -57,11 +57,13 @@ export default {
     selected(movimenti){
       var movimentiSelezionati = this.$store.getters.getMovimentiSelezionati
       movimenti.forEach(movimento => {
-        var index = movimentiSelezionati.indexOf(movimento.numeroMovimento)
-        if (index === -1) 
-          this.$store.dispatch("addToMovimentiSelezionati", movimento.numeroMovimento)
-        else 
-          this.$store.dispatch("removeToMovimentiSelezionati", index)
+        if (!movimento.definitivo) {
+          var index = movimentiSelezionati.indexOf(movimento.numeroMovimento)
+          if (index === -1) 
+            this.$store.dispatch("addToMovimentiSelezionati", movimento.numeroMovimento)
+          else 
+            this.$store.dispatch("removeToMovimentiSelezionati", index)
+        }
       });
     },
      getTotalHourDay(data) {
