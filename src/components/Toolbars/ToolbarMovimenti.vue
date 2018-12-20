@@ -183,6 +183,9 @@ export default {
       this.$store.dispatch('fetchMovimenti', this.$store.getters.getOffset).then(() => {
         this.attendereDialog = false
       })
+      // TODO refresh view altrimenti si hanno problemi con i movimenti a metà della prima GET
+      // questo non funziona
+      this.$forceUpdate()
     },
   }
 }

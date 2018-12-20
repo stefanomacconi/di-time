@@ -33,16 +33,21 @@ const mutations = {
     setDate(state, date) {
         state.date = date
     },
-    addDate(state, date) {
-        const last = state.date[state.date.length-1]
-        if (date.length > 0) {
-            const first = date[0]
-            if (last.data == first.data) {
-                state.date[state.date.length-1].movimenti.concat(date[0].movimenti)
-            }
-        }
-        for (let index = 1; index < date.length; index++) {
-            state.date.push(date[index])
+    addDate(state, dateAggiuntive) {
+        if (dateAggiuntive.length == 0)
+            return
+        // unisci il primo coi rimasugli della get precedente (se esiste)
+        const nuoveDate = Object.keys(dateAggiuntive)
+        const firstDataAggiunta = nuoveDate[0]
+        const chiaviDate = Object.keys(state.date)
+        if (String(firstDataAggiunta) == chiaviDate[chiaviDate.length - 1])
+            // aggiungi movimenti rimanenti alla data
+            state.date[firstDataAggiunta].movimenti = 
+                state.date[firstDataAggiunta].movimenti.concat(dateAggiuntive[firstDataAggiunta].movimenti)
+        // aggiungi gli altri oggetti data
+        const nuoviValori = Object.values(dateAggiuntive)
+        for (let index = 1; index < nuoveDate.length; index++) {
+            state.date[nuoveDate[index]] = nuoviValori[index]
         }
     },
     setCausali(state, causali) {
@@ -50,8 +55,8 @@ const mutations = {
            const data = {
                codice: causale.codice,
                descrizione: causale.descrizione
-           } 
-           state.causali.push(data)
+            } 
+            state.causali.push(data)
         })
     },
     setElencoCdl(state, elencoCdl) {
@@ -113,7 +118,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             var path = '/movimento/lavorazione/' 
             + rootState.utente.dipendente + "/"
-            + 50 + "/" //fixed limit //TODO Abbassare? Alzare?
+            + 50 + "/" //fixed limit //se viene toccato questo occorre toccare anche l'offset nell'increment
             if (offset) {
                path = path + offset 
             }
@@ -201,7 +206,8 @@ const actions = {
         commit('setOffset', offset)
     },
     incrementOffset({dispatch, state}) {
-      var offset = state.offset + 50
+      var offset = state.offset + 50 // fixed offset 
+      // se si tocca l'offset occorre modificare anche la chiamata login
       dispatch('setOffset', offset)
     },
     addToMovimentiSelezionati({commit}, movimento) {

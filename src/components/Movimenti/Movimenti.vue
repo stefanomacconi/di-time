@@ -48,13 +48,16 @@ export default {
   },
   methods: {
     more() {
-      this.dialog = true
+      /*this.dialog = true
       this.$store.dispatch('incrementOffset')
       this.$store.dispatch('fetchMovimenti', this.$store.getters.getOffset).then(res => {
-        if (res.data.length == 0) 
+        if (Object.keys(res.data).length === 0) 
           this.moreMovs = false
         this.dialog = false
-      })
+      }) */
+      // TODO refresh view altrimenti si hanno problemi con i movimenti a metà della prima GET
+      // questo non funziona
+      this.$forceUpdate()
     },
   }
 }

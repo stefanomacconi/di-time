@@ -29,7 +29,7 @@ const mutations = {
 }
 
 const actions = {
-    login({ commit, dispatch, state}, authData) {
+    login({ commit, dispatch, state, rootState}, authData) {
         axios.post('/autenticazione', {
             }, { auth: {
                 username: authData.utente,
@@ -53,6 +53,11 @@ const actions = {
             return dispatch('fetchDipendente').then(() => {
                 dispatch('fetchMovimenti').then(() => {
                     router.push('/movimenti')
+                    // altro fetch in background
+                    dispatch('incrementOffset')
+                    dispatch('fetchMovimenti', rootState.movimenti.offset).then(() => {
+                      this.attendereDialog = false
+                    })
                 })
                 // fill def nota spese, elenco causali, cdl and cdc (no need to be synchronous)
                 dispatch('fetchDefinizioneNotaSpese')

@@ -1,33 +1,33 @@
 <template>
   <div>
     <div @click="selected(dataMov.movimenti)">
-        <v-timeline-item :color="getDayColor(dataMov)">
-      <v-img class="rounded" max-height="90px" max-width="500px" :src="getSeasonImage(dataMov.data)"
-        gradient="to top, rgba(255,255,255,0.8), rgba(255,255,255,0.8)"> <!-- class="rounded" -->
-          <v-container fill-height>
-            <v-layout>
-              <div>
-                <strong style="font-size: 15px;"> <!-- color="white" -->
-                  <!-- <font color="white"> -->
-                    {{ moment(dataMov.data).locale('it').format('dddd, DD MMMM YYYY').toUpperCase() }}
-                  <!-- </font> -->
-                </strong>
-                <div v-if="dataMov.oraInizioMattino"> <!-- color="white" -->
-                <!-- <font color="white"> -->
-                  {{ getOrariGiornata(dataMov) }}
-                {{ "(" + moment(getTotalHourDay(dataMov)).format("HH[h] mm[min]") + ")" }}
-                <!-- </font> -->
-                </div>
+      <v-timeline-item class="day" :color="getDayColor(dataMov)">
+        <v-img class="rounded" max-height="120px" max-width="500px" :src="getSeasonImage(dataMov.data)"
+          gradient="to top, rgba(255,255,255,0.7), rgba(255,255,255,0.7)"> <!-- class="rounded" -->
+            <v-container fill-height>
+              <v-layout>
                 <div>
-                <!-- <font color="white"> -->
-                  {{ moment(getTotalHourMovs(dataMov)).format("HH[h] mm[min]") }}
-                <!-- </font> -->
+                  <strong style="font-size: 15px;"> <!-- color="white" -->
+                    <!-- <font color="white"> -->
+                      {{ moment(dataMov.data).locale('it').format('dddd, DD MMMM YYYY').toUpperCase() }}
+                    <!-- </font> -->
+                  </strong>
+                  <div v-if="dataMov.oraInizioMattino"> <!-- color="white" -->
+                  <!-- <font color="white"> -->
+                    {{ getOrariGiornata(dataMov) }}
+                  {{ "(" + moment(getTotalHourDay(dataMov)).format("HH[h] mm[min]") + ")" }}
+                  <!-- </font> -->
+                  </div>
+                  <div>
+                  <!-- <font color="white"> -->
+                    {{ moment(getTotalHourMovs(dataMov)).format("HH[h] mm[min]") }}
+                  <!-- </font> -->
+                  </div>
                 </div>
-              </div>
-            </v-layout>
-          </v-container>
-      </v-img>
-        </v-timeline-item>
+              </v-layout>
+            </v-container>
+        </v-img>
+      </v-timeline-item>
     </div>   
     <div v-for="(movimento, index) in dataMov.movimenti" :key="movimento.numeroMovimento + index">
       <movimento :movimento="movimento" :ultimo="isUltimo(dataMov.movimenti.length, index)"/>
@@ -164,5 +164,8 @@ export default {
 }
 .rounded {
   border-radius:5px;
+}
+.day {
+  padding-bottom: 2px;
 }
 </style>
