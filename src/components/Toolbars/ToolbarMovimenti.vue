@@ -2,7 +2,7 @@
   <div>
     <v-toolbar color='primary' dark scroll-off-screen app clipped-right>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>
+      <v-toolbar-title @click="scrollTop">
         DiTime - Movimenti
         <v-divider light vertical></v-divider>
       </v-toolbar-title>
@@ -174,7 +174,11 @@ export default {
       console.log("searchMov")
     },
     scrollTop() {
-      window.scrollTo(0,0)
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
     },
     more() {
       this.drawer = false
