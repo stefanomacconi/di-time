@@ -93,14 +93,14 @@
       </v-list>
     </v-navigation-drawer>
     <!-- Date Menu -->
-    <v-menu ref="dateMenu" :close-on-content-click="$refs.dateMenu.save(date)" v-model="dateMenu" :nudge-right="40"
+    <v-menu ref="dateMenu" :close-on-content-click="false" reactive v-model="dateMenu" :nudge-right="40"
       :return-value.sync="date" lazy transition="scale-transition" offset-y full-width
       max-width="290px" min-width="290px">
       <v-date-picker :event-color="functionEventsColor" :events="functionEvents" v-model="date" 
         :allowed-dates="allowedDates" no-title show-current locale="it-IT">
         <v-spacer></v-spacer>
         <!-- <v-btn flat color="secondary" @click="dateMenu = false">Chiudi</v-btn> -->
-        <!--<v-btn flat color="primary" @click="$refs.dateMenu.save(date); scrollTop()">OK</v-btn> -->
+        <v-btn flat color="primary" @click="$refs.dateMenu.save(date)">OK</v-btn> <!-- ; scrollTop() -->
       </v-date-picker>
     </v-menu>
     <!-- ATTENDERE DIALOG -->
@@ -186,7 +186,7 @@ export default {
       // TODO refresh view altrimenti si hanno problemi con i movimenti a metà della prima GET
       // questo non funziona
       this.$forceUpdate()
-    },
+    }
   }
 }
 </script>
