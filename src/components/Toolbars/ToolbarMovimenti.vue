@@ -16,7 +16,7 @@
           <v-icon>event</v-icon>
         </v-btn>
         <!--<v-divider dark vertical></v-divider>-->
-        <v-btn icon>
+        <v-btn icon @click="showSearchMov">
           <v-icon>search</v-icon>
         </v-btn>
       </v-toolbar-items>
@@ -65,7 +65,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <!-- Menu Fun -->
-        <v-list-tile  @click="searchMov">
+        <v-list-tile  @click="showSearchMov">
           <v-list-tile-action>
             <v-icon>search</v-icon>
           </v-list-tile-action>
@@ -114,6 +114,25 @@
         </v-card>
       </v-dialog>
     </div>
+    <!-- MOV FILTER DIALOG --> 
+      <v-layout row justify-center>
+      <v-dialog v-model="movFilterDialog" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Ricerca Movimento</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary" flat @click="movFilterDialog = false">Chiudi</v-btn>
+            <v-btn color="primary" flat @click="searchMov">Cerca</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 
@@ -129,7 +148,8 @@ export default {
       {title: "Nuovo Movimento", to: "/movimento", icon: "add"},
     ],
     menuLogout : {title: "Logout", icon: "lock"},
-    attendereDialog : false
+    attendereDialog : false,
+    movFilterDialog : false
   }),
   computed: {
     utente () {
@@ -169,9 +189,13 @@ export default {
         return "red"
     },
     allowedDates: val => val <= new Date().toISOString().substr(0, 10),
-    searchMov() {
+    showSearchMov() {
       this.drawer = false
-      console.log("searchMov")
+      this.movFilterDialog = true
+    },
+    searchMov() {
+      this.movFilterDialog = false
+      console.log("TODO RICERCA")
     },
     scrollTop() {
       window.scrollTo({
