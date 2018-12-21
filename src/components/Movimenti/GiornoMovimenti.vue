@@ -64,7 +64,7 @@ export default {
           else 
             this.$store.dispatch("removeToMovimentiSelezionati", index)
         }
-      });
+      })
     },
      getTotalHourDay(data) {
       var t1 = moment(this.getTimeFromInteger(data.oraInizioMattino), "HH:mm")

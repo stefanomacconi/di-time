@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-timeline align-top dense>
-      <div v-for="(dataMov, index) in dateMov" :key="dataMov.data + index">
+      <div v-for="(dataMov, index) in dateMovFiltered" :key="dataMov.data + index">
       <giorno-movimenti :dataMov="dataMov"/>
       </div>
     </v-timeline>
@@ -10,7 +10,7 @@
         <v-icon>add</v-icon>
       </v-btn>
     </v-layout>
-    <v-btn v-if="moreMovs" dark flat icon small class="red" style="left:-3px" @click="more">
+    <v-btn v-if="moreMovs" flat icon small color="white" class="light-blue" style="left:-3px" @click="more"> <!-- class="red" -->
       <v-icon>arrow_drop_down</v-icon>
     </v-btn>
     <v-btn v-else dark flat icon small class="green" style="left:-3px">
@@ -39,15 +39,27 @@ export default {
     moreMovs: true
   }),
   computed: {
-    dateMov() {
-      return this.$store.getters.getDate            
-    },
+    dateMovFiltered() {
+      var tzoffset = (new Date()).getTimezoneOffset() * 60000 //offset in milliseconds
+      const msPicked = this.$store.getters.getPickedData
+      var result = {}
+      const values = Object.values(this.$store.getters.getDate)
+      for (let index = 0; index < values.length; index++) {
+        if (msPicked >= values[index].data) {
+          // var data = new Date(values[index].data).toISOString().substr(0, 10)
+          var data = new Date(values[index].data - tzoffset).toISOString().substr(0, 10)
+          result[data] = this.$store.getters.getDate[data]
+        }
+      }
+      return result
+    }
   },
   components: {
     'giorno-movimenti': GiornoMovimenti
   },
   methods: {
     more() {
+      // commento perché le computed non vengono rinfrescate per il sidemenu
       /*this.dialog = true
       this.$store.dispatch('incrementOffset')
       this.$store.dispatch('fetchMovimenti', this.$store.getters.getOffset).then(res => {

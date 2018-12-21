@@ -16,7 +16,7 @@ Vue.filter('truncate', function (value) {
     if (!value) return ''
     value = value.toString()
     if(value.length > 50)
-      return value.substring(0, 49) + "...";
+      return value.substring(0, 49) + "..."
     return value
   }
 )

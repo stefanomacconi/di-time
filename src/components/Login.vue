@@ -30,8 +30,8 @@ export default {
   }),
   methods: {
     clear() {
-      this.utente = "";
-      this.password = "";
+      this.utente = ""
+      this.password = ""
     },
     login() {
       this.dialog = true

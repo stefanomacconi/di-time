@@ -49,7 +49,7 @@ const actions = {
                 siglaDitta: data.siglaDitta
             })
             // init environment
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.token;
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + state.token
             return dispatch('fetchDipendente').then(() => {
                 dispatch('fetchMovimenti').then(() => {
                     router.push('/movimenti')

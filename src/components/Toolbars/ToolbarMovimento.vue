@@ -112,11 +112,11 @@ export default {
       this.asyncClear()
     },
     async asyncClear() {
-      await this.sleep(500);
+      await this.sleep(500)
       this.$store.dispatch('clearMov')
     },
     sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+      return new Promise(resolve => setTimeout(resolve, ms))
     },
     selectTab(index) {
       this.$store.dispatch('setTab', index)

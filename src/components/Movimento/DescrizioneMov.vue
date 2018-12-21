@@ -446,7 +446,7 @@ export default {
       var elencoCausali = [""]
       causali.forEach(causale => {
         elencoCausali.push(causale.codice + " - " + causale.descrizione)
-      });
+      })
       return elencoCausali
     },
     elencoCdl() {
@@ -454,7 +454,7 @@ export default {
       var elencoCdl = [""]
       cdl.forEach(centro => {
         elencoCdl.push(centro.codice + " - " + centro.descrizione)
-      });
+      })
       return elencoCdl
     },
     elencoCdc() {
@@ -462,7 +462,7 @@ export default {
       var elencoCdc = [""]
       cdc.forEach(centro => {
         elencoCdc.push(centro.codice + " - " + centro.descrizione)
-      });
+      })
       return elencoCdc
     },
     posizione: {

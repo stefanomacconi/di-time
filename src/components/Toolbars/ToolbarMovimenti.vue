@@ -93,14 +93,14 @@
       </v-list>
     </v-navigation-drawer>
     <!-- Date Menu -->
-    <v-menu ref="dateMenu" :close-on-content-click="false" v-model="dateMenu" :nudge-right="40"
+    <v-menu ref="dateMenu" :close-on-content-click="$refs.dateMenu.save(date)" v-model="dateMenu" :nudge-right="40"
       :return-value.sync="date" lazy transition="scale-transition" offset-y full-width
       max-width="290px" min-width="290px">
       <v-date-picker :event-color="functionEventsColor" :events="functionEvents" v-model="date" 
         :allowed-dates="allowedDates" no-title show-current locale="it-IT">
         <v-spacer></v-spacer>
         <!-- <v-btn flat color="secondary" @click="dateMenu = false">Chiudi</v-btn> -->
-        <v-btn flat color="primary" @click="$refs.dateMenu.save(date); scrollTop()">OK</v-btn>
+        <!--<v-btn flat color="primary" @click="$refs.dateMenu.save(date); scrollTop()">OK</v-btn> -->
       </v-date-picker>
     </v-menu>
     <!-- ATTENDERE DIALOG -->
@@ -140,7 +140,7 @@ export default {
     },
     date: {
       get () {
-        var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        var tzoffset = (new Date()).getTimezoneOffset() * 60000 //offset in milliseconds
         return new Date(this.$store.getters.getPickedData - tzoffset).toISOString().substr(0, 10)
       },
       set (value) {
