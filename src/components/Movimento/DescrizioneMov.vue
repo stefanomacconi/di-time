@@ -7,8 +7,8 @@
             <!-- *** DATA, COMMESSA e NOTA *** -->
             <v-menu ref="menuDate" :close-on-content-click="true" v-model="menuDate" :nudge-right="40" 
               lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
-              <v-text-field slot="activator" v-model="dateFormatted" label="Data Movimento" 
-                prepend-icon="event" @blur="date = parseDate(dateFormatted)" required>
+              <v-text-field slot="activator" v-model="computedDateFormatted" label="Data Movimento" 
+                prepend-icon="event" @blur="date = parseDate(computedDateFormatted)" required>
               </v-text-field>
               <v-date-picker v-model="date" :allowed-dates="allowedDates" no-title locale="it-IT"
                 :readonly="this.$store.getters.isNewMov ? false : true">
@@ -281,7 +281,7 @@ export default {
           this.$store.dispatch('handleError', error.response.data)
       })
   },
-  data: (vm) => ({
+  data: () => ({
     valid: false,
     commessaRules: [
       v => !!v || campoObbligatorio,
@@ -304,7 +304,6 @@ export default {
     attendereDialog: false,
     listaCommesseCercate: [],
     listaCommesseDialog: false,
-    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     menuDate: false,
     menuTimeG1: false,
     menuTimeG2: false,
@@ -473,11 +472,6 @@ export default {
         this.$store.commit('setPosizione', value)
       }
     },
-  },
-  watch: {
-    date () {
-      this.dateFormatted = this.formatDate(this.date)
-    }
   },
   mixins: [utilities],
   methods: {
