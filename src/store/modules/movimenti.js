@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const state = {
-    date: [],
+    date: {},
     offset: 0,
     causali: [],
     elencoCdl: [],
@@ -15,7 +15,7 @@ const state = {
 
 const mutations = {
     clearMovimentiData(state) {
-        state.date = [],
+        state.date = {},
         state.offset = 0,
         state.giorniError = [],
         state.giorniWarning = [],
@@ -94,6 +94,16 @@ const mutations = {
     addToGiorniError(state, data) {
         if (state.giorniError.indexOf(data) === -1) 
             state.giorniError.push(data)
+    },
+    removeToGiorniWarning(state, data) {
+        const index = state.giorniWarning.indexOf(data)
+        if (index != -1)
+            state.giorniWarning.splice(index, 1)
+        },
+    removeToGiorniError(state, data) {
+        const index = state.giorniError.indexOf(data)
+        if (index != -1)
+            state.giorniError.splice(index, 1)
     },
     setPickedData(state, data) {
         state.pickedData = data
@@ -198,6 +208,12 @@ const actions = {
     },
     addToGiorniError({commit}, data) {
         commit('addToGiorniError', data)
+    },
+    removeToGiorniWarning({commit}, data) {
+        commit('removeToGiorniWarning', data)
+    },
+    removeToGiorniError({commit}, data) {
+        commit('removeToGiorniError', data)
     },
     setPickedData({commit}, data) {
         commit('setPickedData', data)

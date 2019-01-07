@@ -132,13 +132,17 @@ export default {
           return "success"
       }
       if (totaleOreGiorno == totaleOreMovs) {
+        this.removeToGiorniError(dataMov.data)
+        this.removeToGiorniWarning(dataMov.data)
         return "primary"
       }
-      if (totaleOreGiorno > totaleOreMovs) {
+      if (totaleOreGiorno > totaleOreMovs || !totaleOreGiorno) {
+        this.removeToGiorniError(dataMov.data)
         this.addToGiorniWarning(dataMov.data)
         return "warning"
       }
       if (totaleOreGiorno < totaleOreMovs) {
+        this.removeToGiorniWarning(dataMov.data)
         this.addToGiorniError(dataMov.data)
         return "error"
       }
@@ -146,8 +150,14 @@ export default {
     addToGiorniWarning(data) {
       this.$store.dispatch("addToGiorniWarning", data)
     },
+    removeToGiorniWarning(data) {
+      this.$store.dispatch("removeToGiorniWarning", data)
+    },
     addToGiorniError(data) {
       this.$store.dispatch("addToGiorniError", data)
+    },
+    removeToGiorniError(data) {
+      this.$store.dispatch("removeToGiorniError", data)
     },
     isUltimo(len, index) {
       return (len - 1) == index

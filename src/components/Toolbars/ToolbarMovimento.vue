@@ -182,11 +182,7 @@ export default {
           */
           const newDatabean = res.data
           const stringDate = moment(newDatabean.data).format('YYYY-MM-DD')
-          var dataBean = this.$store.getters.getDate[stringDate]
-          if (dataBean)
-            this.$store.getters.getDate[stringDate] = newDatabean
-          else   
-            this.$store.getters.getDate.push(newDatabean)
+          this.$store.getters.getDate[stringDate] = newDatabean
           // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
           history.replaceState({}, "movimenti", "movimenti")
           if (!numeroMovimento)
