@@ -44,6 +44,7 @@ export default {
       const msPicked = this.$store.getters.getPickedData
       var result = {}
       const values = Object.values(this.$store.getters.getDate)
+      values.sort(this.compare)
       for (let index = 0; index < values.length; index++) {
         if (msPicked >= values[index].data) {
           // var data = new Date(values[index].data).toISOString().substr(0, 10)
@@ -58,7 +59,14 @@ export default {
     'giorno-movimenti': GiornoMovimenti
   },
   methods: {
-    more() {
+    compare(a,b) {
+      if (a.data > b.data)
+        return -1
+      if (a.data < b.data)
+        return 1
+      return 0
+    },
+    // more() {
       // commento perché le computed non vengono rinfrescate per il sidemenu
       /*this.dialog = true
       this.$store.dispatch('incrementOffset')
@@ -69,8 +77,8 @@ export default {
       }) */
       // TODO refresh view altrimenti si hanno problemi con i movimenti a metà della prima GET
       // questo non funziona
-      this.$forceUpdate()
-    },
+      // this.$forceUpdate()
+    // },
   }
 }
 </script>

@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import moment from 'moment'
+
 const state = {
     date: {},
     offset: 0,
@@ -49,6 +51,10 @@ const mutations = {
         for (let index = 1; index < nuoveDate.length; index++) {
             state.date[nuoveDate[index]] = nuoviValori[index]
         }
+    },
+    addNewDataBean(state, dataBean) {
+        const stringDate = moment(dataBean.data).format('YYYY-MM-DD')
+        state.date[stringDate] = dataBean
     },
     setCausali(state, causali) {
         causali.forEach(causale => {
@@ -234,7 +240,10 @@ const actions = {
     },
     clearMovimentiSelezionati({commit}) {
         commit('clearMovimentiSelezionati')
-    }
+    },
+    addNewDataBean({commit}, dataBean) {
+        commit('addNewDataBean', dataBean)
+    },
 }
 
 const getters = {

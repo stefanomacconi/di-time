@@ -171,6 +171,10 @@ export default {
           // eslint-disable-next-line
           console.log(res)
           // Update lista mov
+          // TODO: ELIMINARE QUESTO
+          // APPENA SI CAPISCE PERCHE' NON FUNZIONANO LE COMPUTED DEI MOVIMENTI
+          // LO STORE CAMBIA MA NON VIENE VISTO IL CAMBIAMENTO
+          // PROBABILMENTE C'E' QUALCOSA CHE NON VA NEL METODO dateMovFiltered() in Movimenti.vue
           /*
           this.$store.dispatch('fetchMovimenti').then(() => {
             // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
@@ -180,9 +184,9 @@ export default {
             this.$router.push({ name: 'movimento', params: { id: numMov }})
           })
           */
+
           const newDatabean = res.data
-          const stringDate = moment(newDatabean.data).format('YYYY-MM-DD')
-          this.$store.getters.getDate[stringDate] = newDatabean
+          this.$store.dispatch("addNewDataBean", newDatabean)
           // manipolo l'history per evitare che il back faccia tornare su "nuovo movimento"
           history.replaceState({}, "movimenti", "movimenti")
           if (!numeroMovimento)
@@ -190,7 +194,7 @@ export default {
             numeroMovimento = newDatabean.movimenti[newDatabean.movimenti.length - 1].numeroMovimento
           this.attendereDialog = false
           this.$router.push({ name: 'movimento', params: { id: numeroMovimento }})
-          // TODO Magari mettere messaggio di success
+          // TODO Magari mettere qui un messaggio di success
         }).catch(error => {
           this.attendereDialog = false
           // eslint-disable-next-line
