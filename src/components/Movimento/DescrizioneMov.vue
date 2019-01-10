@@ -183,7 +183,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="secondary" flat @click="commessaFilterDialog = false">Chiudi</v-btn>
-            <v-btn color="primary" flat @click="cercaCommessa">Cerca</v-btn>
+            <v-btn color="primary" flat @click="searchCommessa">Cerca</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -205,7 +205,7 @@
         <v-card-text style="height: 600px;">
           <v-list two-line>
             <template v-for="(commessa, index) in listaCommesseCercate">
-              <v-list-tile :key="commessa.codice" avatar ripple @click="sceltaCommessa(commessa.codice)">
+              <v-list-tile :key="commessa.codice" avatar ripple @click="chooseCommessa(commessa.codice)">
                 <v-list-tile-content>
                   <v-list-tile-title>
                     <b>{{ commessa.codice }}</b>
@@ -494,7 +494,7 @@ export default {
         return
       this.commessaFilterDialog = true
     },
-    cercaCommessa() {
+    searchCommessa() {
       this.commessaFilterDialog = false
       this.attendereDialog = true
       axios.get('/commessa/', {params: {
@@ -502,19 +502,19 @@ export default {
           descrizione: this.descrizionePerCommessa,
           ragioneSociale: this.RagioneSocialePerCommessa,
           stato: this.statoPerCommessa
-        }}).then(res => {
-          // eslint-disable-next-line
-          console.log(res)
-          this.attendereDialog = false
-          this.listaCommesseCercate = res.data
-          this.listaCommesseDialog = true
-        }).catch(error => {
-          // eslint-disable-next-line
-          console.log(error)
-          this.$store.dispatch('handleError', error.response.data)
-        })
+      }}).then(res => {
+        // eslint-disable-next-line
+        console.log(res)
+        this.attendereDialog = false
+        this.listaCommesseCercate = res.data
+        this.listaCommesseDialog = true
+      }).catch(error => {
+        // eslint-disable-next-line
+        console.log(error)
+        this.$store.dispatch('handleError', error.response.data)
+      })
     },
-    sceltaCommessa(codice) {
+    chooseCommessa(codice) {
       this.$store.commit('setCommessa', codice)
       this.listaCommesseDialog = false
     },

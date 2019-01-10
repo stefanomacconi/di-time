@@ -123,6 +123,40 @@
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs6 md6 lg6>
+                  <v-menu ref="menuDataDaPerMov" :close-on-content-click="true" v-model="menuDataDaPerMov" :nudge-right="40" 
+                    lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
+                    <v-text-field slot="activator" v-model="dataDaPerMovFormatted" label="Da (Data)" 
+                      prepend-icon="event" @blur="dataDaPerMov = parseDate(dataDaPerMovFormatted)" required>
+                    </v-text-field>
+                    <v-date-picker v-model="dataDaPerMov" :allowed-dates="allowedDates" no-title locale="it-IT">
+                    </v-date-picker>
+                  </v-menu>
+                </v-flex>
+                <v-flex xs6 md6 lg6>
+                  <v-menu ref="menuDataAPerMov" :close-on-content-click="true" v-model="menuDataAPerMov" :nudge-right="40" 
+                    lazy transition="scale-transition" offset-y full-width max-width="290px" min-width="290px">
+                    <v-text-field slot="activator" v-model="dataAPerMovFormatted" label="A (Data)" 
+                      prepend-icon="event" @blur="dataAPerMov = parseDate(dataAPerMovFormatted)" required>
+                    </v-text-field>
+                    <v-date-picker v-model="dataAPerMov" :allowed-dates="allowedDatesA" no-title locale="it-IT">
+                    </v-date-picker>
+                  </v-menu>
+                </v-flex>
+                <v-flex xs6 md6 lg6>
+                  <v-text-field v-model="commessaPerMov" label="Commessa" hint="Codice Commessa">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs6 md6 lg6>
+                  <v-text-field v-model="posizionePerMov" label="Posizione" type="number" hint="Posizione">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12>
+                  <v-textarea rows="3" v-model="notaPerMov" prepend-icon="notes" label="Nota">
+                  </v-textarea>
+                </v-flex>
+              </v-layout>
             </v-container>
           </v-card-text>
           <v-card-actions>
@@ -140,16 +174,28 @@
 
 import moment from 'moment'
 
+import axios from 'axios'
+
 export default {
-  data: () => ({
+  data: (vm) => ({
     dateMenu: false,
+    menuDataDaPerMov: false,
+    dataDaPerMov: new Date().toISOString().substr(0, 10),
+    dataDaPerMovFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    menuDataAPerMov: false,
+    dataAPerMov: new Date().toISOString().substr(0, 10),
+    dataAPerMovFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
     drawer: false,
     menusLink: [
       {title: "Nuovo Movimento", to: "/movimento", icon: "add"},
     ],
     menuLogout : {title: "Logout", icon: "lock"},
     attendereDialog : false,
-    movFilterDialog : false
+    movFilterDialog : false,
+    commessaPerMov: "",
+    posizionePerMov: "",
+    notaPerMov: ""
+
   }),
   computed: {
     utente () {
@@ -189,13 +235,37 @@ export default {
         return "red"
     },
     allowedDates: val => val <= new Date().toISOString().substr(0, 10),
+    allowedDatesA(val) {
+      return (val >= this.dataDaPerMov) && (val <= new Date().toISOString().substr(0, 10))
+    }, 
     showSearchMov() {
       this.drawer = false
       this.movFilterDialog = true
     },
     searchMov() {
       this.movFilterDialog = false
-      console.log("TODO RICERCA")
+      this.attendereDialog = true
+      const da = moment(this.dataDaPerMovFormatted, "DD/MM/YYYY").valueOf()
+      const a = moment(this.dataAPerMovFormatted, "DD/MM/YYYY").valueOf()
+      var posizione = null
+      if (this.posizionePerMov)
+        posizione = this.posizionePerMov
+      axios.get('/movimento/lavorazione/ricerca/' + this.$store.getters.getDipendente, {params: {
+          commessa: this.commessaPerMov,
+          posizione,
+          da,
+          a,
+          nota: this.notaPerMov
+      }}).then(res => {
+        // eslint-disable-next-line
+        console.log(res)
+        this.attendereDialog = false
+        // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+      }).catch(error => {
+        // eslint-disable-next-line
+        console.log(error)
+        this.$store.dispatch('handleError', error.response.data)
+      })
     },
     scrollTop() {
       window.scrollTo({
@@ -214,7 +284,27 @@ export default {
       // TODO refresh view altrimenti si hanno problemi con i movimenti a metà della prima GET
       // questo non funziona
       this.$forceUpdate()
-    }
-  }
+    },
+    parseDate(date) {
+      if (!date) 
+        return null
+      const [month, day, year] = date.split('/')
+      return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`
+    },
+    formatDate(date) {
+      if (!date) 
+        return null
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+  },
+  watch: {
+      dataDaPerMov () {
+        this.dataDaPerMovFormatted = this.formatDate(this.dataDaPerMov)
+      },
+      dataAPerMov () {
+        this.dataAPerMovFormatted = this.formatDate(this.dataAPerMov)
+      }
+    },
 }
 </script>
