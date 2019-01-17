@@ -38,7 +38,7 @@ export const routes = [
             toolbar: ToolbarMovimento
         }, 
         props: {
-            default: false, toolbar: true 
+            default: true, toolbar: true 
         }, 
         beforeEnter(to, from, next) {
             if (store.getters.getToken) {

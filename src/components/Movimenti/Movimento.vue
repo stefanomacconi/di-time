@@ -81,10 +81,7 @@ export default {
       }
     },
     toMovimento(movimento) {
-      if (!movimento.definitivo)
-        return { name: 'movimento', params: { id: movimento.numeroMovimento }}
-      else
-        return "movimenti"
+        return { name: 'movimento', params: { id: movimento.numeroMovimento, definitivo: movimento.definitivo }}
     },
     getMovColor(movimento) {
       var movimenti = this.$store.getters.getMovimentiSelezionati

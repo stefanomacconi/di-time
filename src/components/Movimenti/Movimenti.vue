@@ -2,7 +2,7 @@
   <div>
     <v-timeline align-top dense>
       <div v-for="(dataMov, index) in dateMovFiltered" :key="dataMov.data + index">
-      <giorno-movimenti :dataMov="dataMov"/>
+        <giorno-movimenti :dataMov="dataMov"/>
       </div>
     </v-timeline>
     <v-layout column class="fab-container">

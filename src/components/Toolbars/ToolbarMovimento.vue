@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color='primary' dark fixed app clipped-right>
+    <v-toolbar :color="this.definitivo ? 'secondary' : 'primary'" dark fixed app clipped-right>
       <v-icon dark @click="goBack">arrow_back</v-icon>
       &nbsp;&nbsp;&nbsp;
       <v-toolbar-title v-if="this.isNewMov">
@@ -20,15 +20,15 @@
           <v-btn icon>
             <v-icon>print</v-icon>
           </v-btn>
-          <v-btn icon>
+          <v-btn icon :disabled="this.definitivo">
             <v-icon>attach_file</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
-          <v-btn icon @click="saveMov(id)">
+          <v-btn icon @click="saveMov(id)" :disabled="this.definitivo">
             <v-icon color="green lighten-2">check_circle</v-icon>
           </v-btn>
           <v-divider dark vertical></v-divider>
-          <v-btn icon @click="dialogConfirm = true">
+          <v-btn icon @click="dialogConfirm = true" :disabled="this.definitivo">
             <v-icon color="red lighten-2">delete_forever</v-icon>
           </v-btn>
         </v-toolbar-items>
@@ -104,6 +104,9 @@ export default {
   props: {
     id: {
       default: ""
+    },
+    definitivo: {
+      default: false
     }
   },
   methods: {

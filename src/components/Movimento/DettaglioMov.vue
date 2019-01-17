@@ -2,7 +2,7 @@
   <div>
     <v-tabs-items v-model="tab">
       <v-tab-item :value="0">
-        <descrizione-mov></descrizione-mov>
+        <descrizione-mov :definitivo="this.definitivo"></descrizione-mov>
       </v-tab-item>
       <v-tab-item :value="1">
           <nota-spese-mov></nota-spese-mov>
@@ -24,6 +24,11 @@ export default {
   data() {
     return {
       isNewMov: this.$store.getters.isNewMov,
+    }
+  },
+  props: {
+    definitivo: {
+      default: false
     }
   },
   computed: {

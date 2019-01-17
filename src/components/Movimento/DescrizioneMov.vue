@@ -259,7 +259,10 @@ export default {
     if (this.$store.getters.isNewMov)
       return
     this.attendereDialog = true
-    const path = '/movimento/lavorazione/singolo/' + this.$store.getters.getDipendente + "/"
+    var pre = '/movimento/lavorazione/singolo/'
+    if (!this.definitivo)
+      pre = pre + 'parcheggio/'
+    const path = pre + this.$store.getters.getDipendente + "/"
       + this.$route.params.id
     axios.get(path)
       .then(res => {
@@ -280,6 +283,11 @@ export default {
           console.log(error)
           this.$store.dispatch('handleError', error.response.data)
       })
+  },
+  props: {
+    definitivo: {
+      default: false
+    }
   },
   data: () => ({
     valid: false,
