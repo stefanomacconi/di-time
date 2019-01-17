@@ -167,6 +167,54 @@
         </v-card>
       </v-dialog>
     </v-layout>
+    <!-- MOV LIST DIALOG -->
+    <v-layout row justify-center>
+      <v-dialog v-model="listaMovsDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="listaMovsDialog = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Movimenti Trovati</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-title v-if="listaMovs.length > 29" slot="extension" class="yellow--text text--lighten-3">
+              <small>* Risultato Incompleto</small>
+            </v-toolbar-title>
+            <v-toolbar-title v-if="listaMovs.length == 0" slot="extension" class="red--text text--lighten-3">
+              <small>* Nessun movimento trovato</small>
+            </v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line>
+            <template v-for="(movimento, index) in listaMovs">
+              <v-list-tile :key="movimento.numeroMovimento" avatar ripple 
+                @click="chooseMov(movimento.numeroMovimento, movimento.definitivo)">
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    <b>{{ movimento.commessa }}</b>
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title class="text--primary">
+                    {{ movimento.descrizioneCommessa }}
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{ movimento.nota }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+                <v-list-tile-action>
+                  <v-list-tile-action-text>
+                    &nbsp;&nbsp;
+                    {{ moment(movimento.data).locale('it').format('DD/MM/YYYY').toUpperCase() }}
+                  </v-list-tile-action-text>
+                  <v-list-tile-action-text>
+                    <strong>
+                      {{ moment.utc(moment.duration(movimento.tempo,"h").asMilliseconds()).format("HH[h] mm[min]") }}
+                    </strong>
+                  </v-list-tile-action-text>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="index + 1 < listaMovs.length" :key="index"></v-divider>
+            </template>
+          </v-list>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </div>
 </template>
 
@@ -192,10 +240,11 @@ export default {
     menuLogout : {title: "Logout", icon: "lock"},
     attendereDialog : false,
     movFilterDialog : false,
+    listaMovsDialog : false,
     commessaPerMov: "",
     posizionePerMov: "",
-    notaPerMov: ""
-
+    notaPerMov: "",
+    listaMovs: []
   }),
   computed: {
     utente () {
@@ -260,7 +309,8 @@ export default {
         // eslint-disable-next-line
         console.log(res)
         this.attendereDialog = false
-        // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+        this.listaMovs = res.data
+        this.listaMovsDialog = true
       }).catch(error => {
         // eslint-disable-next-line
         console.log(error)
@@ -297,6 +347,9 @@ export default {
       const [year, month, day] = date.split('-')
       return `${day}/${month}/${year}`
     },
+    chooseMov(numeroMov, definitivo) {
+      this.$router.push({ name: 'movimento', params: { id: numeroMov, definitivo }})
+    }
   },
   watch: {
       dataDaPerMov () {
